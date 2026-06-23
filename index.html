@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TJ3B USB化キット 注文フォーム</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --border-focus: #0ea5e9;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--text-main);
+        }
+
+        /* 売り切れ状態の警告帯 */
+        .soldout-banner {
+            display: none;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            letter-spacing: 1px;
+        }
+
+        /* メイン商品売り切れ時にフォーム全体をロックする効果 */
+        body.is-soldout .soldout-banner {
+            display: block;
+        }
+
+        body.is-soldout .step-section,
+        body.is-soldout .sticky-footer {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        body.is-soldout .action-btn {
+            background-color: #94a3b8 !important;
+            cursor: not-allowed;
+        }
+
+        .step-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            transition: opacity 0.3s ease;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background-color: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* 入力フォーム */
+        .input-group {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required-badge {
+            background-color: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background-color: #f8fafc;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        /* 選択カードのデザイン */
+        .card-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .select-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #ffffff;
+        }
+
+        .select-card:hover {
+            border-color: #94a3b8;
+            background-color: #f8fafc;
+        }
+
+        .select-card input[type="checkbox"],
+        .select-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .card-price {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        /* 商品個別売り切れ用の特別スタイル */
+        .select-card.soldout-product {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none; /* クリックを物理的にロック */
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .select-card.soldout-product .card-price {
+            color: var(--text-muted);
+        }
+
+        /* 選択状態のスタイル */
+        .select-card.selected {
+            border-color: var(--primary);
+            background-color: #f0f9ff;
+        }
+        
+        .select-card.locked {
+            border-color: var(--primary);
+            background-color: #f0f9ff;
+            cursor: default;
+        }
+
+        /* カスタムチェックボックス/ラジオボタンの見た目 */
+        .check-indicator {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .radio-indicator {
+            border-radius: 50%;
+        }
+
+        .select-card.selected .check-indicator {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .check-indicator::after {
+            content: "";
+            display: none;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            margin-bottom: 2px;
+        }
+
+        .select-card.selected .check-indicator::after {
+            display: block;
+        }
+
+        .card-left {
+            display: flex;
+            align-items: center;
+        }
+
+        /* ステータスバー */
+        .sticky-footer {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            bottom: 20px;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+
+        .sku-display {
+            font-family: 'Inter', monospace;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            background: #f1f5f9;
+            padding: 8px 12px;
+            border-radius: 6px;
+            word-break: break-all;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .total-label {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .total-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .total-amount span {
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-print { background-color: var(--success); }
+        .btn-mail { background-color: var(--primary); }
+
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        /* 印刷用画面 */
+        .print-container {
+            display: none;
+            background-color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .ticket {
+            border: 2px solid #0f172a;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+        .ticket-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .ticket-sku {
+            text-align: center;
+            font-family: monospace;
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 20px;
+        }
+
+        .ticket-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 16px;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 8px;
+        }
+
+        .ticket-total {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        .back-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background-color: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @media print {
+            body { padding: 0; background-color: white; }
+            .container { display: none !important; }
+            .print-container { display: block !important; }
+            .back-btn { display: none !important; }
+            .ticket { border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="appContainer">
+        
+        <div class="soldout-banner">
+            ⚠️ 只今売り切れ中です（次回入荷をお待ちください）
+        </div>
+
+        <h1 class="header-title">TJ3B USB化キット 注文フォーム</h1>
+
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number">0</span> お客様情報</h2>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label for="buyerName">お名前 (ニックネーム可) <span class="required-badge">必須</span></label>
+                <input type="text" id="buyerName" placeholder="例: ロボタロウ">
+            </div>
+            
+            <div class="input-group" id="addressGroup" style="display: none; margin-top: 20px; margin-bottom: 0;">
+                <label for="buyerAddress">お届け先住所 <span class="required-badge">必須</span></label>
+                <textarea id="buyerAddress" placeholder="〒000-0000&#10;都道府県 市区町村 番地・マンション名"></textarea>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number">1</span> メイン商品の確認</h2>
+            <div class="card-grid">
+                <label class="select-card locked selected" id="card-main">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">TJ3B USB化キット</span>
+                            <span class="card-desc">DAISENロボットキット向け (DS-EG1009)</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-main">990円</span>
+                    <input type="checkbox" id="mainItem" value="990" data-code="DS-EG1009" checked disabled>
+                </label>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number">2</span> オプションの選択 (複数可)</h2>
+            <div class="card-grid">
+                
+                <label class="select-card" id="card-ua1">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB A to C コード [通信向け]</span>
+                            <span class="card-desc">型番: UA-1</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-ua1">+ 150円</span>
+                    <input type="checkbox" class="option-check" id="check-ua1" value="150" data-code="UA-1" onchange="updateForm()">
+                </label>
+
+                <label class="select-card" id="card-uc1">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB C to C コード [通信向け]</span>
+                            <span class="card-desc">型番: UC-1</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-uc1">+ 160円</span>
+                    <input type="checkbox" class="option-check" id="check-uc1" value="160" data-code="UC-1" onchange="updateForm()">
+                </label>
+
+                <label class="select-card" id="card-uc3">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB C to C コード [PD対応]</span>
+                            <span class="card-desc">型番: UC-3</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-uc3">+ 770円</span>
+                    <input type="checkbox" class="option-check" id="check-uc3" value="770" data-code="UC-3" onchange="updateForm()">
+                </label>
+
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number">3</span> 受取方法の選択</h2>
+            <div class="card-grid">
+                
+                <label class="select-card selected" id="card-direct">
+                    <div class="card-left">
+                        <div class="check-indicator radio-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">直接手渡し</span>
+                            <span class="card-desc">次回集まりの際にお渡しします</span>
+                        </div>
+                    </div>
+                    <span class="card-price">追加なし</span>
+                    <input type="radio" name="delivery" class="delivery-radio" value="0" data-code="" checked onchange="updateForm()">
+                </label>
+
+                <label class="select-card" id="card-mail">
+                    <div class="card-left">
+                        <div class="check-indicator radio-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">郵送 (クリックポスト)</span>
+                            <span class="card-desc">型番: CP</span>
+                        </div>
+                    </div>
+                    <span class="card-price">+ 185円</span>
+                    <input type="radio" name="delivery" class="delivery-radio" value="185" data-code="CP" onchange="updateForm()">
+                </label>
+
+            </div>
+        </div>
+
+        <div class="sticky-footer">
+            <div class="sku-display" id="displaySku">構成: 読込中...</div>
+            <div class="total-row">
+                <span class="total-label">合計お支払い金額</span>
+                <div class="total-amount"><span id="displayTotal">990</span> <span>円</span></div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="action-btn btn-print" id="btnPrint" onclick="executeAction('print')">
+                    📄 PDF出力 (手渡し申込用)
+                </button>
+                <button type="button" class="action-btn btn-mail" id="btnMail" onclick="executeAction('mail')">
+                    ✉️ メールで注文を送信する
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="print-container" id="printContainer">
+        <div class="ticket">
+            <div class="ticket-title">TJ3Bキット 注文申込書</div>
+            <div class="ticket-sku" id="printSku">---</div>
+            
+            <div class="ticket-row">
+                <span style="font-weight: 700;">お名前</span>
+                <span id="printName">未入力</span>
+            </div>
+            
+            <div class="ticket-row" id="printAddressRow" style="display: none;">
+                <span style="font-weight: 700;">ご住所</span>
+                <span id="printAddress" style="text-align: right; white-space: pre-wrap;"></span>
+            </div>
+            
+            <div style="margin-top: 24px; margin-bottom: 8px; font-weight: 700;">ご注文内容・受取方法</div>
+            <div id="printItemsList">
+                </div>
+            
+            <div class="ticket-total">
+                合計金額: <span id="printPrice">990</span> 円
+            </div>
+        </div>
+        <button class="back-btn" onclick="closePrintView()">入力画面に戻る</button>
+    </div>
+
+    <script>
+        // =================================================================
+        // 【商品別 在庫・売り切れ管理スイッチ】
+        // 在庫あり ➔ true  /  売り切れ(在庫なし) ➔ false に書き換えるだけ！
+        // =================================================================
+        const IN_STOCK = {
+            MAIN: true,  // キット本体 (DS-EG1009)
+            UA1:  true,  // USB A to C コード (UA-1)
+            UC1:  false,  // USB C to C コード (UC-1)
+            UC3:  false  // USB C to C コード [PD対応] (UC-3)  ◀例として初期状態を売り切れにしています
+        };
+        // =================================================================
+
+        const BASE_PRICE = 990;
+        const BASE_SKU = "DS-EG1009";
+        
+        let uniqueId = "";
+        let currentSkuString = "";
+
+        // 4桁のユニークID生成
+        function generateUniqueId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (let i = 0; i < 4; i++) {
+                uniqueId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+        }
+
+        // 冒頭の設定(IN_STOCK)を読み込んで画面UIに適用する関数
+        function applyStockSettings() {
+            // 1. キット本体 (メイン商品) のチェック
+            if (!IN_STOCK.MAIN) {
+                document.body.classList.add('is-soldout'); // 全体を売り切れモードにロック
+                document.getElementById('card-main').classList.add('soldout-product');
+                document.getElementById('price-main').textContent = "売り切れ";
+                document.getElementById('mainItem').checked = false;
+            }
+
+            // 2. オプション UA-1 のチェック
+            if (!IN_STOCK.UA1) {
+                document.getElementById('card-ua1').classList.add('soldout-product');
+                document.getElementById('price-ua1').textContent = "売り切れ";
+                document.getElementById('check-ua1').disabled = true;
+            }
+
+            // 3. オプション UC-1 のチェック
+            if (!IN_STOCK.UC1) {
+                document.getElementById('card-uc1').classList.add('soldout-product');
+                document.getElementById('price-uc1').textContent = "売り切れ";
+                document.getElementById('check-uc1').disabled = true;
+            }
+
+            // 4. オプション UC-3 のチェック
+            if (!IN_STOCK.UC3) {
+                document.getElementById('card-uc3').classList.add('soldout-product');
+                document.getElementById('price-uc3').textContent = "売り切れ";
+                document.getElementById('check-uc3').disabled = true;
+            }
+        }
+
+        // フォームの状態を更新するメイン関数
+        function updateForm() {
+            // メインが売り切れの場合は計算処理をスキップ
+            if (!IN_STOCK.MAIN) {
+                document.getElementById('displaySku').textContent = "売り切れ";
+                document.getElementById('displayTotal').textContent = "0";
+                return;
+            }
+
+            let totalPrice = BASE_PRICE;
+            let skuParts = [BASE_SKU];
+
+            // オプション商品の集計 (チェックボックスが有効かつ選択されているもの)
+            const options = document.querySelectorAll('.option-check');
+            options.forEach(opt => {
+                const card = opt.closest('.select-card');
+                if (opt.checked && !opt.disabled) {
+                    card.classList.add('selected');
+                    totalPrice += parseInt(opt.value, 10);
+                    skuParts.push(opt.getAttribute('data-code'));
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+
+            // 受取方法の集計と住所欄の表示切り替え
+            let isPostalSelected = false;
+            const deliveryRadios = document.querySelectorAll('.delivery-radio');
+            deliveryRadios.forEach(radio => {
+                const card = radio.closest('.select-card');
+                if (radio.checked) {
+                    card.classList.add('selected');
+                    totalPrice += parseInt(radio.value, 10);
+                    const code = radio.getAttribute('data-code');
+                    if (code) {
+                        skuParts.push(code);
+                    }
+                    if (code === "CP") {
+                        isPostalSelected = true;
+                    }
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+
+            document.getElementById('addressGroup').style.display = isPostalSelected ? 'block' : 'none';
+
+            // 画面への反映
+            currentSkuString = `[${uniqueId}] ${skuParts.join('+')}`;
+            document.getElementById('displaySku').textContent = `注文構成: ${currentSkuString}`;
+            document.getElementById('displayTotal').textContent = totalPrice.toLocaleString('ja-JP');
+        }
+
+        // アクション実行
+        function executeAction(type) {
+            if (document.body.classList.contains('is-soldout') || !IN_STOCK.MAIN) {
+                alert("只今売り切れ中のため、注文は受け付けておりません。");
+                return;
+            }
+
+            const name = document.getElementById('buyerName').value.trim();
+            if (!name) {
+                alert("お名前を入力してください。");
+                document.getElementById('buyerName').focus();
+                return;
+            }
+
+            const checkedDelivery = document.querySelector('.delivery-radio:checked');
+            const isPostal = checkedDelivery.getAttribute('data-code') === "CP";
+            const address = document.getElementById('buyerAddress').value.trim();
+
+            if (isPostal && !address) {
+                alert("郵送をご希望の場合は、お届け先住所を入力してください。");
+                document.getElementById('buyerAddress').focus();
+                return;
+            }
+
+            const totalPrice = document.getElementById('displayTotal').textContent;
+            const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
+
+            let itemsTextForMail = `・TJ3B USB化キット (DS-EG1009)\n`;
+            let itemsHtmlForPrint = `<div class="ticket-row"><span>TJ3B USB化キット</span><span>990円</span></div>`;
+            
+            const options = document.querySelectorAll('.option-check:checked');
+            options.forEach(opt => {
+                if (!opt.disabled) {
+                    const title = opt.closest('.select-card').querySelector('.card-title').textContent;
+                    const price = opt.value;
+                    itemsTextForMail += `・${title}\n`;
+                    itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`;
+                }
+            });
+
+            const deliveryPrice = checkedDelivery.value;
+            itemsTextForMail += `・受取: ${deliveryName}\n`;
+            itemsHtmlForPrint += `<div class="ticket-row"><span style="color: #64748b;">受取: ${deliveryName}</span><span style="color: #64748b;">+${deliveryPrice}円</span></div>`;
+
+            if (type === 'print') {
+                document.getElementById('printSku').textContent = currentSkuString;
+                document.getElementById('printName').textContent = name;
+                document.getElementById('printItemsList').innerHTML = itemsHtmlForPrint;
+                document.getElementById('printPrice').textContent = totalPrice;
+                
+                if (isPostal && address) {
+                    document.getElementById('printAddressRow').style.display = 'flex';
+                    document.getElementById('printAddress').textContent = address;
+                } else {
+                    document.getElementById('printAddressRow').style.display = 'none';
+                }
+                
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('printContainer').style.display = 'block';
+                
+                setTimeout(() => { window.print(); }, 300);
+
+            } else if (type === 'mail') {
+                const targetEmail = "shtgames.shop@gmail.com"; 
+                const subject = encodeURIComponent(`【注文】TJ3Bキット ${currentSkuString}`);
+                
+                let addressSection = "";
+                if (isPostal) {
+                    addressSection = `【お届け先住所】\n${address}\n\n`;
+                }
+
+                const body = encodeURIComponent(
+                    `TJ3Bキットの注文をお願いします。\n\n` +
+                    `【管理コード】\n${currentSkuString}\n\n` +
+                    `【お名前】 ${name}\n\n` +
+                    `【ご注文内容】\n${itemsTextForMail}\n` +
+                    `【合計金額】 ${totalPrice}円\n\n` +
+                    addressSection +
+                    `※決済はロボカップ会の練習会での現金の手渡しとなります。\n` +
+                    `※このメールは受取時に確認させていただく場合がございますので、当日まで大切に保管し、会場にてご提示ください。`
+                );
+                
+                window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+            }
+        }
+
+        function closePrintView() {
+            document.getElementById('printContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+        }
+
+        window.onload = () => {
+            generateUniqueId();
+            applyStockSettings(); // 1番最初に在庫状況をUIに反映
+            updateForm();
+        };
+    </script>
+
+</body>
+</html>
