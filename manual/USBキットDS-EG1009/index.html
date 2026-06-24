@@ -191,7 +191,7 @@
             font-weight: 700;
             font-size: 14px;
             color: #1e293b;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -201,10 +201,15 @@
             padding-left: 20px;
             font-size: 14px;
             color: #334155;
+            line-height: 1.6;
         }
 
         .landmark-list li {
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+        }
+
+        .landmark-list li:last-child {
+            margin-bottom: 0;
         }
 
         /* 配線図（ビジュアル風CSS） */
@@ -237,7 +242,7 @@
         }
 
         .pin-name {
-            width: 240px;
+            width: 290px;
             font-weight: bold;
             color: #38bdf8;
         }
@@ -335,7 +340,9 @@
             body { padding: 20px 12px; }
             .section { padding: 20px; }
             .download-box { flex-direction: column; text-align: center; }
-            .pin-name { width: 180px; }
+            .pin-name { width: 100%; margin-bottom: 4px; }
+            .wiring-row { flex-direction: column; align-items: flex-start; margin-bottom: 16px; }
+            .pin-arrow { display: none; }
         }
     </style>
 </head>
@@ -376,28 +383,27 @@
                 <li class="step-item">
                     <span class="step-num">2</span>
                     <div class="step-content">
-                        <h3>TJ3B基板（ICソケットのランド）へのハンダ付け</h3>
-                        <p>TJ3B基板の中央付近にある、長いメインIC用のICソケットのハンダ端子（ランド）へ直接ハンダ付けを行います。</p>
+                        <h3>TJ3B基板へのハンダ付け</h3>
+                        <p>TJ3B基板の中央付近にある、長いメインIC用のICソケットのハンダ端子（ランド）へ直接ハンダ付けを行います。基板の向きを正しく確認し、以下の目印に沿って接続してください。</p>
                         
                         <div class="landmark-box">
-                            <div class="landmark-title">🔍 ハンダ付け位置の絶対的な目印</div>
+                            <div class="landmark-title">🔍 ハンダ付け位置の確実な目印</div>
                             <ul class="landmark-list">
-                                <li>メインICソケットのハンダランドは2列並んでいます。その<strong>【後ろ側の一列】</strong>を狙います。</li>
-                                <li>基板に貼られている<strong>【「検」シールの反対側】</strong>の列です。</li>
-                                <li>その列の<strong>【L側（左側）から数えて何番目か】</strong>で接続ピンを特定します。</li>
-                                <li>※目印として、5番目と6番目のランドの間に小さなコンデンサ<strong>「C1」</strong>が配置されています。</li>
+                                <li><strong>【列の指定】</strong> メインICソケットのハンダランド（2列並んでいるうち）の、<strong>ロボットの後ろ側</strong>にある一列を狙います。</li>
+                                <li><strong>【場所の指定】</strong> 基板の「検」シールが貼られている位置とは真逆、つまり<strong>検シールの反対側</strong>となる、<strong>L側（左側）から数えて3番目と4番目</strong>のランドです。</li>
+                                <li><strong>【目印（確認用）】</strong> 数え間違い防止の指標として、<strong>5番目と6番目のランドの間にコンデンサ「C1」</strong>が配置されています。</li>
                             </ul>
                         </div>
                         
                         <div class="wiring-diagram">
                             <div class="wiring-title">ハンダ付け・配線指定</div>
                             <div class="wiring-row">
-                                <span class="pin-name">L側から3番目のランド (TX / 17番ピン)</span>
+                                <span class="pin-name">後ろ側列・L側から3番目のランド (TX)</span>
                                 <span class="pin-arrow">➔</span>
                                 <span class="wire-color wire-black">モジュール RxD (黒コード)</span>
                             </div>
                             <div class="wiring-row">
-                                <span class="pin-name">L側から4番目のランド (RX / 18番ピン)</span>
+                                <span class="pin-name">後ろ側列・L側から4番目のランド (RX)</span>
                                 <span class="pin-arrow">➔</span>
                                 <span class="wire-color wire-red">モジュール TxD (赤コード)</span>
                             </div>
@@ -447,7 +453,7 @@
                         <div class="download-box" style="margin-top: 12px;">
                             <div class="download-info">
                                 <h4>Mac用 ドライバー</h4>
-                                <p>CH34xSER_MAC.ZIP (CH9102対応版)</p>
+                                <p>CH34XSER_MAC.ZIP (CH9102対応版)</p>
                             </div>
                             <a href="https://www.wch.cn/downloads/CH34XSER_MAC_ZIP.html" target="_blank" class="download-btn">公式サイトを開く</a>
                         </div>
@@ -482,7 +488,7 @@
 
                 <p style="margin-bottom: 12px;"><strong>Q. ポートは認識するが、プログラムの書き込みに失敗する</strong></p>
                 <p style="color: #475569; padding-left: 12px; border-left: 2px solid var(--border);">
-                    ➔ L側から3番目（TX）と4番目（RX）の配線が逆になっている可能性が非常に高いです。5番目と6番目の間にある「C1」の位置を基準に、もう一度ランドの数え方を確認してください。
+                    ➔ 【ロボットの後ろ側列】の、L側から3番目（TX）と4番目（RX）の配線が逆になっている可能性が非常に高いです。5番目と6番目の間にあるコンデンサ「C1」の位置や、検シールの反対側であることを基準に、もう一度ランドの数え方を確認してください。
                 </p>
             </div>
         </section>
