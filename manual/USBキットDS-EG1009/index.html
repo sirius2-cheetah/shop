@@ -178,6 +178,35 @@
             margin-bottom: 12px;
         }
 
+        /* 物理目印のナビゲーションボックス */
+        .landmark-box {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .landmark-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .landmark-list {
+            padding-left: 20px;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .landmark-list li {
+            margin-bottom: 4px;
+        }
+
         /* 配線図（ビジュアル風CSS） */
         .wiring-diagram {
             background-color: #0f172a;
@@ -208,7 +237,7 @@
         }
 
         .pin-name {
-            width: 180px;
+            width: 240px;
             font-weight: bold;
             color: #38bdf8;
         }
@@ -306,7 +335,7 @@
             body { padding: 20px 12px; }
             .section { padding: 20px; }
             .download-box { flex-direction: column; text-align: center; }
-            .pin-name { width: 150px; }
+            .pin-name { width: 180px; }
         }
     </style>
 </head>
@@ -347,19 +376,28 @@
                 <li class="step-item">
                     <span class="step-num">2</span>
                     <div class="step-content">
-                        <h3>TJ3BメインICへのハンダ付け</h3>
-                        <p>TJ3B基板の中央左側にある長いメインIC（PIC18F2620）の周辺へ、モジュールからのリード線を以下のピン指定通りにハンダ付けします。</p>
-                        <p style="color: #0ea5e9; font-weight: 500;">※基板上の水色の点のあたり、回路図の17番ピン・18番ピンのラインへ直接インジェクションします。</p>
+                        <h3>TJ3B基板（ICソケットのランド）へのハンダ付け</h3>
+                        <p>TJ3B基板の中央付近にある、長いメインIC用のICソケットのハンダ端子（ランド）へ直接ハンダ付けを行います。</p>
+                        
+                        <div class="landmark-box">
+                            <div class="landmark-title">🔍 ハンダ付け位置の絶対的な目印</div>
+                            <ul class="landmark-list">
+                                <li>メインICソケットのハンダランドは2列並んでいます。その<strong>【後ろ側の一列】</strong>を狙います。</li>
+                                <li>基板に貼られている<strong>【「検」シールの反対側】</strong>の列です。</li>
+                                <li>その列の<strong>【L側（左側）から数えて何番目か】</strong>で接続ピンを特定します。</li>
+                                <li>※目印として、5番目と6番目のランドの間に小さなコンデンサ<strong>「C1」</strong>が配置されています。</li>
+                            </ul>
+                        </div>
                         
                         <div class="wiring-diagram">
                             <div class="wiring-title">ハンダ付け・配線指定</div>
                             <div class="wiring-row">
-                                <span class="pin-name">メインIC 17番ピン (TX)</span>
+                                <span class="pin-name">L側から3番目のランド (TX / 17番ピン)</span>
                                 <span class="pin-arrow">➔</span>
                                 <span class="wire-color wire-black">モジュール RxD (黒コード)</span>
                             </div>
                             <div class="wiring-row">
-                                <span class="pin-name">メインIC 18番ピン (RX)</span>
+                                <span class="pin-name">L側から4番目のランド (RX / 18番ピン)</span>
                                 <span class="pin-arrow">➔</span>
                                 <span class="wire-color wire-red">モジュール TxD (赤コード)</span>
                             </div>
@@ -371,8 +409,8 @@
                         </div>
 
                         <div class="alert-card">
-                            <h4>⚠️ 重要：RX/TXの交差接続</h4>
-                            <p>マイコン側の「送信(TX/17ピン)」はモジュールの「受信(RxD)」へ、マイコン側の「受信(RX/18ピン)」はモジュールの「送信(TxD)」へ交差して接続されます。逆に接続するとC-Styleでの書き込み時に通信エラーになりますので、ハンダ付け前に必ず色を確認してください。</p>
+                            <h4>⚠️ 重要：RX/TXの交差（クロス）接続</h4>
+                            <p>マイコン側の「送信(TX/3番目)」はモジュールの「受信(RxD)」へ、マイコン側の「受信(RX/4番目)」はモジュールの「送信(TxD)」へ交差して接続されます。逆に接続するとC-Styleでの書き込み時に通信エラーになりますので、ハンダ付け前に数え間違いがないか必ずチェックしてください。</p>
                         </div>
                     </div>
                 </li>
@@ -444,7 +482,7 @@
 
                 <p style="margin-bottom: 12px;"><strong>Q. ポートは認識するが、プログラムの書き込みに失敗する</strong></p>
                 <p style="color: #475569; padding-left: 12px; border-left: 2px solid var(--border);">
-                    ➔ ICの17番ピン（RxD・黒）と18番ピン（TxD・赤）の配線が逆になっている可能性が非常に高いです。もう一度ロボット側のハンダ付けの位置が配線図通りになっているか確認してください。
+                    ➔ L側から3番目（TX）と4番目（RX）の配線が逆になっている可能性が非常に高いです。5番目と6番目の間にある「C1」の位置を基準に、もう一度ランドの数え方を確認してください。
                 </p>
             </div>
         </section>
