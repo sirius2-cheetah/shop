@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TJ3B USB-C化キット 取り付け・取扱マニュアル</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent-rxd: #334155; /* 黒コード用 */
+            --accent-txd: #ef4444; /* 赤コード用 */
+            --accent-gnd: #0f172a; /* GND黒用 */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* ヘッダー */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .model-badge {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            font-family: monospace;
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        /* セクション共通 */
+        .section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* 準備物リスト */
+        .grid-tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .tool-tag {
+            background-color: #f1f5f9;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* 手順のレイアウト */
+        .step-list {
+            list-style: none;
+        }
+
+        .step-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 32px;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-item::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 28px;
+            bottom: -20px;
+            width: 2px;
+            background-color: #e2e8f0;
+        }
+
+        .step-item:last-child::before {
+            display: none;
+        }
+
+        .step-num {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: #1e293b;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .step-content h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .step-content p {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 12px;
+        }
+
+        /* 配線図（ビジュアル風CSS） */
+        .wiring-diagram {
+            background-color: #0f172a;
+            border-radius: 12px;
+            padding: 24px;
+            color: #e2e8f0;
+            font-family: monospace;
+            margin: 16px 0;
+        }
+
+        .wiring-title {
+            color: #94a3b8;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .wiring-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .wiring-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .pin-name {
+            width: 140px;
+            font-weight: bold;
+        }
+
+        .pin-arrow {
+            color: var(--primary);
+            margin: 0 16px;
+        }
+
+        .wire-color {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .wire-black { background-color: #334155; color: #f8fafc; border: 1px solid #475569; }
+        .wire-red { background-color: #ef4444; color: white; }
+
+        /* ダウンロードボタン */
+        .download-box {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .download-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .download-info p {
+            font-size: 13px;
+            color: #0369a1;
+        }
+
+        .download-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* 注意事項・警告表示 */
+        .alert-card {
+            background-color: #fffbec;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 12px;
+        }
+
+        .alert-card h4 {
+            color: #b45309;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .alert-card p {
+            font-size: 13px;
+            color: #78350f;
+            margin-bottom: 0;
+        }
+
+        /* フッター */
+        .footer {
+            text-align: center;
+            padding: 24px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 20px 12px; }
+            .section { padding: 20px; }
+            .download-box { flex-direction: column; text-align: center; }
+            .pin-name { width: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header class="header">
+            <h1>TJ3B USB-C化キット 取扱マニュアル</h1>
+            <p>本キットは、ダイセン製ロボットキット「TJ3B」のシリアル通信ポートを現代のUSB Type-C仕様にアップグレードするためのモジュールキットです。</p>
+            <div class="model-badge">対応キット構成: DS-EG1009</div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">■</span> 作業の前に準備するもの</h2>
+            <p style="font-size: 14px; color: var(--text-muted);">ハンダ付けを伴う作業が必要です。火傷や基板の破損に注意して安全に作業を行ってください。</p>
+            <div class="grid-tools">
+                <div class="tool-tag">ハンダゴテ</div>
+                <div class="tool-tag">ハンダ</div>
+                <div class="tool-tag">ニッパー</div>
+                <div class="tool-tag">絶縁テープ</div>
+                <div class="tool-tag">USB-Cケーブル</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">■</span> 取り付け手順</h2>
+            
+            <ol class="step-list">
+                <li class="step-item">
+                    <span class="step-num">1</span>
+                    <div class="step-content">
+                        <h3>モジュールの確認と準備</h3>
+                        <p>お届けしたハンダ済みモジュールから出ている3本のリード線の先端が、綺麗に剥かれているか確認してください。</p>
+                    </div>
+                </li>
+
+                <li class="step-item">
+                    <span class="step-num">2</span>
+                    <div class="step-content">
+                        <h3>TJ3B基板（通信ポート）への配線</h3>
+                        <p>モジュールから伸びている3本のリード線を、TJ3B本体のシリアル通信ポート（9ピンコネクタ裏側、または指定の通信パッド）へ以下の仕様通りに間違いなくハンダ付けしてください。</p>
+                        
+                        <div class="wiring-diagram">
+                            <div class="wiring-title">ハンダ付け・配線指定</div>
+                            <div class="wiring-row">
+                                <span class="pin-name">モジュール側端子</span>
+                                <span class="pin-arrow">➔</span>
+                                <span class="wire-color wire-black">RxD (黒コード)</span>
+                            </div>
+                            <div class="wiring-row">
+                                <span class="pin-name">モジュール側端子</span>
+                                <span class="pin-arrow">➔</span>
+                                <span class="wire-color wire-red">TxD (赤コード)</span>
+                            </div>
+                            <div class="wiring-row">
+                                <span class="pin-name">モジュール側端子</span>
+                                <span class="pin-arrow">➔</span>
+                                <span class="wire-color wire-black">GND (黒コード)</span>
+                            </div>
+                        </div>
+
+                        <div class="alert-card">
+                            <h4>⚠️ 重要：逆接続の注意</h4>
+                            <p>RxD（黒）とTxD（赤）を逆に接続すると、パソコンとロボット間で通信エラーが発生し、プログラムの書き込みができなくなります。色と端子名を必ず二重チェックしてください。</p>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="step-item">
+                    <span class="step-num">3</span>
+                    <div class="step-content">
+                        <h3>絶縁処理と固定</h3>
+                        <p>ハンダ付けした部分が他の金属パーツや基板の回路に接触してショートしないよう、ハンダ付けの根本を絶縁テープ（ビニールテープ）などでしっかりと保護し、モジュール本体をロボットのフレームに固定します。</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">■</span> パソコン用ドライバーの導入</h2>
+            <p style="font-size: 14px; margin-bottom: 16px;">本キットに搭載されている通信チップ（CH9102F）をパソコンに認識させるために、初回のみ専用ドライバーのインストールが必要です。</p>
+            
+            <ol class="step-list">
+                <li class="step-item">
+                    <span class="step-num">1</span>
+                    <div class="step-content">
+                        <h3>ドライバーのダウンロード</h3>
+                        <p>以下のメーカー公式リンク（WCH）から、お使いのパソコンのOS（Windows / Mac）に合ったドライバーをダウンロードしてください。</p>
+                        
+                        <div class="download-box">
+                            <div class="download-info">
+                                <h4>Windows用 ドライバー</h4>
+                                <p>CH343SER.EXE (CH9102対応版)</p>
+                            </div>
+                            <a href="https://www.wch.cn/downloads/CH343SER_EXE.html" target="_blank" class="download-btn">公式サイトを開く</a>
+                        </div>
+
+                        <div class="download-box" style="margin-top: 12px;">
+                            <div class="download-info">
+                                <h4>Mac用 ドライバー</h4>
+                                <p>CH34xSER_MAC.ZIP (CH9102対応版)</p>
+                            </div>
+                            <a href="https://www.wch.cn/downloads/CH34XSER_MAC_ZIP.html" target="_blank" class="download-btn">公式サイトを開く</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="step-item">
+                    <span class="step-num">2</span>
+                    <div class="step-content">
+                        <h3>セットアップの実行</h3>
+                        <p>ダウンロードしたファイルを実行し、画面の指示に従って「Install」ボタンをクリックして完了させてください。</p>
+                    </div>
+                </li>
+
+                <li class="step-item">
+                    <span class="step-num">3</span>
+                    <div class="step-content">
+                        <h3>接続確認</h3>
+                        <p>USB-Cケーブルでパソコンと改造したTJ3Bを接続します。ダイセンのプログラミングソフト（C-Styleなど）を開き、COMポートの選択肢に新しくポート番号が追加されていれば、無事に認識完了です！</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">■</span> 動かないときの確認リスト</h2>
+            <div style="font-size: 14px;">
+                <p style="margin-bottom: 12px;"><strong>Q. パソコンがモジュールを全く認識しない・エラーが出る</strong></p>
+                <p style="color: #475569; margin-bottom: 16px; padding-left: 12px; border-left: 2px solid var(--border);">
+                    ➔ 使用しているUSB-Cケーブルが「充電専用」でないか確認してください。必ず<strong>「データ通信対応」</strong>のケーブルを使用する必要があります（Seria等の100均で買う際も『通信対応』の表記があるものを選んでください）。
+                </p>
+
+                <p style="margin-bottom: 12px;"><strong>Q. ポルトは認識するが、プログラムの書き込みに失敗する</strong></p>
+                <p style="color: #475569; padding-left: 12px; border-left: 2px solid var(--border);">
+                    ➔ RxD（黒）とTxD（赤）の配線が逆になっている可能性が非常に高いです。もう一度ロボット側のハンダ付けの位置が配線図通りになっているか確認してください。
+                </p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>© SHTGAMES Craft - TJ3B USB Upgrade Project</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
