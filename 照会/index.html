@@ -6,29 +6,203 @@
     <title>Sirius商店 注文照会</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0ea5e9; --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b; --border: #cbd5e1; --border-focus: #0ea5e9; --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 40px 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; }
-        .header-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 10px; }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 30px; }
-        .card { background: var(--card-bg); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-sm); border: 1px solid #e2e8f0; margin-bottom: 24px; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
-        input[type="text"] { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 20px; font-family: 'Inter', monospace; font-weight: 700; text-align: center; letter-spacing: 2px; text-transform: uppercase; transition: all 0.2s; background-color: #f8fafc; }
-        input[type="text"]:focus { outline: none; border-color: var(--border-focus); background-color: #ffffff; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
-        .search-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; color: white; background-color: var(--primary); transition: all 0.2s; }
-        .search-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        
-        .result-section { display: none; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .result-header { font-size: 18px; font-weight: 700; border-bottom: 2px solid var(--text-main); padding-bottom: 10px; margin-bottom: 16px; }
-        .result-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
-        .result-label { color: var(--text-muted); font-weight: 600; }
-        .result-value { font-weight: 700; text-align: right; }
-        .error-msg { display: none; background-color: #fef2f2; color: #ef4444; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 14px; border: 1px solid #fee2e2; margin-top: 16px; }
-        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; }
-        .back-link:hover { text-decoration: underline; }
+        :root {
+            --primary: #0ea5e9;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --border-focus: #0ea5e9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 20px;
+            font-family: 'Inter', monospace;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            background-color: #f8fafc;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            background-color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .search-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* 検索結果エリア */
+        .result-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            font-size: 18px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--text-main);
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* 商品リスト用の縦並びレイアウト */
+        .result-row.col-layout {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .result-label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .product-list {
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 8px;
+            line-height: 1.8;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .product-code-hint {
+            color: var(--text-muted);
+            font-family: 'Inter', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        .error-msg {
+            display: none;
+            background-color: #fef2f2;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid #fee2e2;
+            margin-top: 16px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -48,11 +222,31 @@
 
         <div class="card result-section" id="resultSection">
             <div class="result-header">ご注文詳細</div>
-            <div class="result-row"><span class="result-label">管理コード</span><span class="result-value" id="resId">---</span></div>
-            <div class="result-row"><span class="result-label">お名前</span><span class="result-value" id="resName">---</span></div>
-            <div class="result-row"><span class="result-label">ご注文構成</span><span class="result-value" id="resSku" style="font-family: monospace;">---</span></div>
-            <div class="result-row"><span class="result-label">受取方法</span><span class="result-value" id="resDelivery">---</span></div>
-            <div class="result-row" style="margin-top: 20px; border: none;"><span class="result-label">合計金額</span><span class="result-value" style="color: var(--primary); font-size: 24px;" id="resPrice">---</span></div>
+            
+            <div class="result-row">
+                <span class="result-label">管理コード</span>
+                <span class="result-value" id="resId">---</span>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">お名前</span>
+                <span class="result-value" id="resName">---</span>
+            </div>
+            
+            <div class="result-row col-layout">
+                <span class="result-label">ご注文構成</span>
+                <div class="product-list" id="resSku">---</div>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">受取方法</span>
+                <span class="result-value" id="resDelivery">---</span>
+            </div>
+            
+            <div class="result-row" style="margin-top: 20px; border: none;">
+                <span class="result-label">合計金額</span>
+                <span class="result-value" style="color: var(--primary); font-size: 24px;" id="resPrice">---</span>
+            </div>
         </div>
 
         <a href="index.html" class="back-link">← 注文フォームに戻る</a>
@@ -62,7 +256,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // 同じくFirebase設定
         const firebaseConfig = {
             apiKey: "AIzaSyCIzF4TdncJN6CGg2CfYugvsTc7osbUojY",
             authDomain: "rcjj-carcheck.firebaseapp.com",
@@ -75,6 +268,19 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // =========================================================
+        // 【商品マスター】型番を分かりやすい商品名に変換する辞書
+        // =========================================================
+        const PRODUCT_MASTER = {
+            "DS-EG1009": "TJ3B USB-C化キット",
+            "CK-2": "ノイズキラーコンデンサ (2個)",
+            "XH-5": "JST純正 XHコネクタ 2種5個セット",
+            "UA-1": "USB A to C コード [通信向け]",
+            "UC-1": "USB C to C コード [通信向け]",
+            "UC-3": "USB C to C コード [PD対応]",
+            "CP": "郵送 (クリックポスト)"
+        };
 
         window.searchOrder = async function() {
             const inputId = document.getElementById('orderId').value.trim().toUpperCase();
@@ -95,17 +301,41 @@
             btn.disabled = true;
 
             try {
-                // 入力された4桁のコードをドキュメントIDとしてFirestoreを検索
                 const docRef = doc(db, "orders", inputId);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const orderData = docSnap.data();
+                    
                     document.getElementById('resId').textContent = orderData.orderId;
                     document.getElementById('resName').textContent = orderData.name;
-                    document.getElementById('resSku').textContent = orderData.sku;
                     document.getElementById('resDelivery').textContent = orderData.delivery;
                     document.getElementById('resPrice').textContent = orderData.price;
+                    
+                    // --- SKU(型番)の翻訳とリスト化処理 ---
+                    const rawSku = orderData.sku; // 例: "[ABCD] DS-EG1009+UA-1"
+                    let productHtml = "";
+
+                    if (rawSku && rawSku.includes("] ")) {
+                        const codesStr = rawSku.split("] ")[1]; // "DS-EG1009+UA-1" の部分を抽出
+                        
+                        if (codesStr === "未選択") {
+                            productHtml = "未選択";
+                        } else {
+                            const codes = codesStr.split("+");
+                            // 辞書と照らし合わせて商品名に変換し、箇条書きのHTMLを作成
+                            productHtml = codes.map(code => {
+                                const productName = PRODUCT_MASTER[code] || code; // 辞書にない場合は型番をそのまま表示
+                                return `・${productName} <span class="product-code-hint">(${code})</span>`;
+                            }).join("<br>");
+                        }
+                    } else {
+                        // 予期せぬフォーマットの場合はそのまま表示
+                        productHtml = rawSku;
+                    }
+
+                    document.getElementById('resSku').innerHTML = productHtml;
+                    // -------------------------------------
                     
                     resultSection.style.display = 'block';
                 } else {
