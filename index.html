@@ -228,9 +228,12 @@
             font-size: 16px;
         }
 
+        /* 概要を型番のみにスッキリ統一 */
         .card-desc {
             font-size: 13px;
             color: var(--text-muted);
+            font-family: monospace;
+            font-weight: 500;
         }
 
         .card-price {
@@ -496,7 +499,7 @@
                     <div class="card-left">
                         <div class="check-indicator"></div>
                         <div class="card-content">
-                            <span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個) (0.1μF 50V)</span>
+                            <span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個)</span>
                             <span class="card-desc">型番: CK-2</span>
                         </div>
                     </div>
@@ -508,7 +511,7 @@
                     <div class="card-left">
                         <div class="check-indicator"></div>
                         <div class="card-content">
-                            <span class="card-title">JST純正 XHコネクタ 2種5個セット (日本圧着端子製造製 ポスト×5 / ハウジング×5)</span>
+                            <span class="card-title">JST純正 XHコネクタ 2種5個セット</span>
                             <span class="card-desc">型番: XH-5</span>
                         </div>
                     </div>
@@ -537,56 +540,56 @@
 
                 <label class="select-card" id="card-uc1">
                     <div class="card-left">
-                        < div  class = " check-indicator " > </div>
-                        < div  class = "card-content" >
-                            < span  class = "card-title" > USB C to C コード [通信向け] </ span >
-                            < span  class = " card - desc" >要約: UC-1 </span>
-                        </div>​​
-                    </div>​​
-                    < span  class = " card - price"  id = "price-uc1" > + 160円</span>
-                    < input  type = "checkbox"  class = "option-check"  id = "check-uc1"  value = "160"  data-code = "UC-1"  onchange = " updateForm ( ) " >
-                </label>​​
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB C to C コード [通信向け]</span>
+                            <span class="card-desc">型番: UC-1</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-uc1">+ 160円</span>
+                    <input type="checkbox" class="option-check" id="check-uc1" value="160" data-code="UC-1" onchange="updateForm()">
+                </label>
 
-                < label  class = "select-card"  id = "card-uc3" >
-                    < div  class = "card-left" >
-                        < div  class = " check-indicator " > </div>
-                        < div  class = "card-content" >
-                            < span  class = "card-title" > USB C to Cコード【PD対応】</ span >
-                            < span  class = " card -desc" >概要: UC-3</span>
-                        </div>​​
-                    </div>​​
-                    < span  class = " card - price"  id = "price-uc3" > + 770円</span>
-                    < input  type = "checkbox"  class = "option-check"  id = "check-uc3"  value = "770"  data-code = "UC-3"  onchange = " updateForm ( ) " >
-                </label>​​
+                <label class="select-card" id="card-uc3">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB C to C コード [PD対応]</span>
+                            <span class="card-desc">型番: UC-3</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-uc3">+ 770円</span>
+                    <input type="checkbox" class="option-check" id="check-uc3" value="770" data-code="UC-3" onchange="updateForm()">
+                </label>
 
-            </div>​​
-        </div>​​
+            </div>
+        </div>
 
-        < div  class = "step-section" >
-            < h2  class = "step-title" > < span  class = "step-number"  id = "deliveryStepNum" > 3 </ span >受取方法の選択</ h2 >
-            < div  class = "card-grid" >
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number" id="deliveryStepNum">3</span> 受取方法の選択</h2>
+            <div class="card-grid">
                 
-                < label  class = "select-card selected"  id = "card-direct" >
-                    < div  class = "card-left" >
-                        < div  class = " check - indicator radio-indicator" > </div>
-                        < div  class = "card-content" >
-                            < span  class = " card - title" >直接手渡し</span>
-                            < span  class = " card -desc" >次回集まりの際にお渡しします</span>
-                        </div>​​
-                    </div>​​
-                    < span  class = " card - price" >追加なし</span>
-                    < input  type = "radio"  name = "delivery"  class = "delivery-radio"  value = "0"  data-code = ""  checked  onchange = " updateForm ( ) " >
-                </label>​​
+                <label class="select-card selected" id="card-direct">
+                    <div class="card-left">
+                        <div class="check-indicator radio-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">直接手渡し</span>
+                            <span class="card-desc">次回集まりの際にお渡しします</span>
+                        </div>
+                    </div>
+                    <span class="card-price">追加なし</span>
+                    <input type="radio" name="delivery" class="delivery-radio" value="0" data-code="" checked onchange="updateForm()">
+                </label>
 
-                < label  class = "select-card"  id = "card-mail" >
-                    < div  class = "card-left" >
-                        < div  class = " check - indicator radio-indicator" > </div>
-                        < div  class = "card-content" >
-                            < span  class = "card-title" >郵送（クリックポスト）</span>
-                            < span  class = " card - desc" >要約: CP </span>
-                        </div>​​
-                    </div>​​
-                    < span  class = " card - price" > + 185円</span>
+                <label class="select-card" id="card-mail">
+                    <div class="card-left">
+                        <div class="check-indicator radio-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">郵送 (クリックポスト)</span>
+                            <span class="card-desc">型番: CP</span>
+                        </div>
+                    </div>
+                    <span class="card-price">+ 185円</span>
                     <input type="radio" name="delivery" class="delivery-radio" value="185" data-code="CP" onchange="updateForm()">
                 </label>
 
@@ -640,15 +643,15 @@
     <script>
         // =================================================================
         // 【商品別 在庫管理スイッチ】
-        // 在庫あり ➔ true  /  売り切れ(在庫なし) ➔ false
+        // ご指定の最新在庫ステータスに更新しました！
         // =================================================================
         const IN_STOCK = {
-            MAIN: false,  // TJ3B USB-C化キット (DS-EG1009)
-            CON:  false,  // ノイズキラーコンデンサ (CK-2)
-            XH:   true,  // JST純正 XHコネクタセット (XH-5)
-            UA1:  true,  // USB A to C コード (UA-1)
-            UC1:  false,  // USB C to C コード (UC-1)
-            UC3:  false  // USB C to C コード [PD対応] (UC-3)
+            MAIN: false, // TJ3B USB-C化キット (DS-EG1009) ➔ なし
+            CON:  false, // ノイズキラーコンデンサ (CK-2) ➔ なし
+            XH:   true,  // JST純正 XHコネクタセット (XH-5) ➔ あり
+            UA1:  true,  // USB A to C コード (UA-1) ➔ あり
+            UC1:  false, // USB C to C コード (UC-1) ➔ なし
+            UC3:  true   // USB C to C コード [PD対応] (UC-3) ➔ あり
         };
         // =================================================================
 
@@ -679,6 +682,7 @@
             if (!IN_STOCK.CON) {
                 document.getElementById('card-con').classList.add('soldout-product');
                 document.getElementById('price-con').textContent = "売り切れ";
+                document.getElementById('check-con').checked = false;
                 document.getElementById('check-con').disabled = true;
             }
             // XHコネクタ
@@ -711,7 +715,6 @@
             let totalPrice = 0;
             let skuParts = [];
 
-            // 1. メイン商品群の集計とチェック状態取得
             const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
             
             const products = document.querySelectorAll('.product-check');
@@ -726,7 +729,6 @@
                 }
             });
 
-            // 2. キット選択状態に応じたUSBオプションエリアの動的制御
             const usbSection = document.getElementById('usbOptionsSection');
             const deliveryStepNum = document.getElementById('deliveryStepNum');
 
@@ -756,7 +758,6 @@
                 });
             }
 
-            // 3. 受取方法の集計
             let isPostalSelected = false;
             const deliveryRadios = document.querySelectorAll('.delivery-radio');
             deliveryRadios.forEach(radio => {
@@ -778,7 +779,6 @@
 
             document.getElementById('addressGroup').style.display = isPostalSelected ? 'block' : 'none';
 
-            // SKUの文字列生成とフッター反映
             if (skuParts.length === 0 || (skuParts.length === 1 && skuParts[0] === "CP")) {
                 currentSkuString = `[${uniqueId}] 未選択`;
             } else {
@@ -812,7 +812,6 @@
                 return;
             }
 
-            // ★【新規追加機能】キットを含む注文時にマニュアルURLを別タブで自動オープンするロジック
             const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
             if (isMainKitSelected) {
                 window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank");
@@ -837,7 +836,7 @@
                     if (!opt.disabled) {
                         const title = opt.closest('.select-card').querySelector('.card-title').textContent;
                         const price = opt.value;
-                        itemsTextForMail += `・[オプション] ${title} (+${price}円)\n`;
+                        itemsTextForMail += `— [追加オプション] ${title} (+${price}円)\n`;
                         itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`;
                     }
                 });
