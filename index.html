@@ -49,7 +49,6 @@
             color: var(--text-main);
         }
 
-        /* 売り切れ状態の警告帯 */
         .soldout-banner {
             display: none;
             background: linear-gradient(135deg, #ef4444, #b91c1c);
@@ -64,20 +63,9 @@
             letter-spacing: 1px;
         }
 
-        body.is-soldout .soldout-banner {
-            display: block;
-        }
-
-        body.is-soldout .step-section,
-        body.is-soldout .sticky-footer {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        body.is-soldout .action-btn {
-            background-color: #94a3b8 !important;
-            cursor: not-allowed;
-        }
+        body.is-soldout .soldout-banner { display: block; }
+        body.is-soldout .step-section, body.is-soldout .sticky-footer { opacity: 0.6; pointer-events: none; }
+        body.is-soldout .action-btn { background-color: #94a3b8 !important; cursor: not-allowed; }
 
         .step-section {
             background: var(--card-bg);
@@ -89,17 +77,12 @@
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        /* 動的表示用のスライドアニメーション設定 */
         .fade-section {
             max-height: 1000px;
             opacity: 1;
             transform: translateY(0);
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                        opacity 0.3s ease, 
-                        margin 0.4s ease, 
-                        padding 0.4s ease, 
-                        border 0.4s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin 0.4s ease, padding 0.4s ease, border 0.4s ease;
         }
 
         .fade-section.hidden {
@@ -136,334 +119,69 @@
             font-weight: 700;
         }
 
-        /* 入力フォーム */
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: flex; align-items: center; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        .required-badge { background-color: var(--danger); color: white; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
 
-        .input-group label {
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
+        input[type="text"], textarea {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; font-family: inherit; transition: all 0.2s; background-color: #f8fafc;
         }
+        textarea { resize: vertical; min-height: 80px; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--border-focus); background-color: #ffffff; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15); }
 
-        .required-badge {
-            background-color: var(--danger);
-            color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 8px;
-        }
+        .card-grid { display: grid; gap: 16px; }
+        .select-card { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 20px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background-color: #ffffff; }
+        .select-card:hover { border-color: #94a3b8; background-color: #f8fafc; }
+        .select-card input[type="checkbox"], .select-card input[type="radio"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+        .card-content { display: flex; flex-direction: column; gap: 4px; }
+        .card-title { font-weight: 700; font-size: 16px; }
+        .card-desc { font-size: 13px; color: var(--text-muted); font-family: monospace; font-weight: 500; }
+        .card-price { font-weight: 700; font-size: 16px; color: var(--primary); white-space: nowrap; }
 
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            transition: all 0.2s;
-            background-color: #f8fafc;
-        }
+        .select-card.soldout-product { opacity: 0.5; cursor: not-allowed; pointer-events: none; background-color: #f1f5f9; border-color: #cbd5e1; }
+        .select-card.soldout-product .card-price { color: var(--text-muted); }
+        .select-card.selected { border-color: var(--primary); background-color: #f0f9ff; }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        .check-indicator { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; margin-right: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+        .radio-indicator { border-radius: 50%; }
+        .select-card.selected .check-indicator { background-color: var(--primary); border-color: var(--primary); }
+        .check-indicator::after { content: ""; display: none; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-bottom: 2px; }
+        .select-card.selected .check-indicator::after { display: block; }
+        .card-left { display: flex; align-items: center; }
 
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--border-focus);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
-        }
-
-        /* 選択カード */
-        .card-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        .select-card {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background-color: #ffffff;
-        }
-
-        .select-card:hover {
-            border-color: #94a3b8;
-            background-color: #f8fafc;
-        }
-
-        .select-card input[type="checkbox"],
-        .select-card input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-        }
-
-        .card-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .card-title {
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        /* 概要を型番のみにスッキリ統一 */
-        .card-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-family: monospace;
-            font-weight: 500;
-        }
-
-        .card-price {
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--primary);
-            white-space: nowrap;
-        }
-
-        /* 売り切れスタイル */
-        .select-card.soldout-product {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-            background-color: #f1f5f9;
-            border-color: #cbd5e1;
-        }
-
-        .select-card.soldout-product .card-price {
-            color: var(--text-muted);
-        }
-
-        /* 選択状態 */
-        .select-card.selected {
-            border-color: var(--primary);
-            background-color: #f0f9ff;
-        }
-
-        /* インジケータ */
-        .check-indicator {
-            width: 22px;
-            height: 22px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            margin-right: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-
-        .radio-indicator {
-            border-radius: 50%;
-        }
-
-        .select-card.selected .check-indicator {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .check-indicator::after {
-            content: "";
-            display: none;
-            width: 6px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-            margin-bottom: 2px;
-        }
-
-        .select-card.selected .check-indicator::after {
-            display: block;
-        }
-
-        .card-left {
-            display: flex;
-            align-items: center;
-        }
-
-        /* 固定ステータスバー */
-        .sticky-footer {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
-            position: sticky;
-            bottom: 20px;
-            z-index: 10;
-            transition: opacity 0.3s ease;
-        }
-
-        .sku-display {
-            font-family: 'Inter', monospace;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            background: #f1f5f9;
-            padding: 8px 12px;
-            border-radius: 6px;
-            word-break: break-all;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 20px;
-        }
-
-        .total-label {
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .total-amount {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-        }
-
-        .total-amount span {
-            font-size: 16px;
-            color: var(--text-main);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            color: white;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .action-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
+        .sticky-footer { background-color: var(--card-bg); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-md); border: 1px solid var(--border); position: sticky; bottom: 20px; z-index: 10; transition: opacity 0.3s ease; }
+        .sku-display { font-family: 'Inter', monospace; font-size: 13px; color: var(--text-muted); margin-bottom: 12px; background: #f1f5f9; padding: 8px 12px; border-radius: 6px; word-break: break-all; }
+        .total-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+        .total-label { font-size: 16px; font-weight: 700; }
+        .total-amount { font-size: 32px; font-weight: 700; color: var(--primary); line-height: 1; }
+        .total-amount span { font-size: 16px; color: var(--text-main); }
+        .button-group { display: flex; gap: 12px; }
+        .action-btn { flex: 1; padding: 14px; font-size: 16px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; color: white; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-print { background-color: var(--success); }
         .btn-mail { background-color: var(--primary); }
+        
+        /* 処理中のローディング表示用 */
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 100; justify-content: center; align-items: center; font-size: 20px; font-weight: 700; color: var(--primary); }
 
-        @media (max-width: 480px) {
-            .button-group {
-                flex-direction: column;
-            }
-        }
+        @media (max-width: 480px) { .button-group { flex-direction: column; } }
 
-        /* 印刷用画面 */
-        .print-container {
-            display: none;
-            background-color: white;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .ticket {
-            border: 2px solid #0f172a;
-            padding: 40px;
-            border-radius: 12px;
-        }
-
-        .ticket-title {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .ticket-sku {
-            text-align: center;
-            font-family: monospace;
-            font-size: 18px;
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            border-bottom: 2px solid #0f172a;
-            padding-bottom: 20px;
-        }
-
-        .ticket-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            font-size: 16px;
-            border-bottom: 1px dashed var(--border);
-            padding-bottom: 8px;
-        }
-
-        .ticket-total {
-            font-size: 24px;
-            font-weight: 700;
-            text-align: right;
-            margin-top: 30px;
-        }
-
-        .back-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 12px 24px;
-            background-color: var(--text-muted);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        @media print {
-            body { padding: 0; background-color: white; }
-            .container { display: none !important; }
-            .print-container { display: block !important; }
-            .back-btn { display: none !important; }
-            .ticket { border: 1px solid #000; }
-        }
+        .print-container { display: none; background-color: white; max-width: 800px; margin: 0 auto; }
+        .ticket { border: 2px solid #0f172a; padding: 40px; border-radius: 12px; }
+        .ticket-title { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        .ticket-sku { text-align: center; font-family: monospace; font-size: 18px; color: var(--text-muted); margin-bottom: 30px; border-bottom: 2px solid #0f172a; padding-bottom: 20px; }
+        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 16px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
+        .ticket-total { font-size: 24px; font-weight: 700; text-align: right; margin-top: 30px; }
+        .back-btn { display: block; margin: 20px auto; padding: 12px 24px; background-color: var(--text-muted); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        @media print { body { padding: 0; background-color: white; } .container { display: none !important; } .print-container { display: block !important; } .back-btn { display: none !important; } .ticket { border: 1px solid #000; } }
     </style>
 </head>
 <body>
 
-    <div class="container" id="appContainer">
-        
-        <div class="soldout-banner">
-            ⚠️ 只今主要パーツが売り切れ中です（次回入荷をお待ちください）
-        </div>
+    <div id="loadingOverlay" class="loading-overlay">データを送信中...</div>
 
+    <div class="container" id="appContainer">
+        <div class="soldout-banner">⚠️ 只今主要パーツが売り切れ中です（次回入荷をお待ちください）</div>
         <h1 class="header-title">Sirius商店 注文フォーム</h1>
 
         <div class="step-section">
@@ -472,7 +190,6 @@
                 <label for="buyerName">お名前 (ニックネーム可) <span class="required-badge">必須</span></label>
                 <input type="text" id="buyerName" placeholder="例: ロボタロウ">
             </div>
-            
             <div class="input-group" id="addressGroup" style="display: none; margin-top: 20px; margin-bottom: 0;">
                 <label for="buyerAddress">お届け先住所 <span class="required-badge">必須</span></label>
                 <textarea id="buyerAddress" placeholder="〒000-0000&#10;都道府県 市区町村 番地・マンション名"></textarea>
@@ -482,134 +199,67 @@
         <div class="step-section">
             <h2 class="step-title"><span class="step-number">1</span> 商品の選択 (複数選択可能)</h2>
             <div class="card-grid">
-                
                 <label class="select-card selected" id="card-main">
-                    <div class="card-left">
-                        <div class="check-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">TJ3B USB-C化キット</span>
-                            <span class="card-desc">型番: DS-EG1009</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">TJ3B USB-C化キット</span><span class="card-desc">型番: DS-EG1009</span></div></div>
                     <span class="card-price" id="price-main">990円</span>
-                    <input type="checkbox" class="product-check" id="check-main" value="990" data-code="DS-EG1009" checked onchange="updateForm()">
+                    <input type="checkbox" class="product-check" id="check-main" value="990" data-code="DS-EG1009" checked onchange="window.updateForm()">
                 </label>
-
                 <label class="select-card" id="card-con">
-                    <div class="card-left">
-                        <div class="check-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個)</span>
-                            <span class="card-desc">型番: CK-2</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個)</span><span class="card-desc">型番: CK-2</span></div></div>
                     <span class="card-price" id="price-con">50円</span>
-                    <input type="checkbox" class="product-check" id="check-con" value="50" data-code="CK-2" onchange="updateForm()">
+                    <input type="checkbox" class="product-check" id="check-con" value="50" data-code="CK-2" onchange="window.updateForm()">
                 </label>
-
                 <label class="select-card" id="card-xh">
-                    <div class="card-left">
-                        <div class="check-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">JST純正 XHコネクタ 2種5個セット</span>
-                            <span class="card-desc">型番: XH-5</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">JST純正 XHコネクタ 2種5個セット</span><span class="card-desc">型番: XH-5</span></div></div>
                     <span class="card-price" id="price-xh">200円</span>
-                    <input type="checkbox" class="product-check" id="check-xh" value="200" data-code="XH-5" onchange="updateForm()">
+                    <input type="checkbox" class="product-check" id="check-xh" value="200" data-code="XH-5" onchange="window.updateForm()">
                 </label>
-
             </div>
         </div>
 
         <div class="step-section fade-section" id="usbOptionsSection">
             <h2 class="step-title"><span class="step-number">2</span> USBコードの追加オプション (複数選択可能)</h2>
             <div class="card-grid">
-                
                 <label class="select-card" id="card-ua1">
-                    <div class="card-left">
-                        <div class="check-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">USB A to C コード [通信向け]</span>
-                            <span class="card-desc">型番: UA-1</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">USB A to C コード [通信向け]</span><span class="card-desc">型番: UA-1</span></div></div>
                     <span class="card-price" id="price-ua1">+ 150円</span>
-                    <input type="checkbox" class="option-check" id="check-ua1" value="150" data-code="UA-1" onchange="updateForm()">
+                    <input type="checkbox" class="option-check" id="check-ua1" value="150" data-code="UA-1" onchange="window.updateForm()">
                 </label>
-
                 <label class="select-card" id="card-uc1">
-                    <div class="card-left">
-                        <div class="check-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">USB C to C コード [通信向け]</span>
-                            <span class="card-desc">型番: UC-1</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">USB C to C コード [通信向け]</span><span class="card-desc">型番: UC-1</span></div></div>
                     <span class="card-price" id="price-uc1">+ 160円</span>
-                    <input type="checkbox" class="option-check" id="check-uc1" value="160" data-code="UC-1" onchange="updateForm()">
+                    <input type="checkbox" class="option-check" id="check-uc1" value="160" data-code="UC-1" onchange="window.updateForm()">
                 </label>
-
                 <label class="select-card" id="card-uc3">
-                    <div class="card-left">
-                        <div class="check-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">USB C to C コード [PD対応]</span>
-                            <span class="card-desc">型番: UC-3</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">USB C to C コード [PD対応]</span><span class="card-desc">型番: UC-3</span></div></div>
                     <span class="card-price" id="price-uc3">+ 770円</span>
-                    <input type="checkbox" class="option-check" id="check-uc3" value="770" data-code="UC-3" onchange="updateForm()">
+                    <input type="checkbox" class="option-check" id="check-uc3" value="770" data-code="UC-3" onchange="window.updateForm()">
                 </label>
-
             </div>
         </div>
 
         <div class="step-section">
             <h2 class="step-title"><span class="step-number" id="deliveryStepNum">3</span> 受取方法の選択</h2>
             <div class="card-grid">
-                
                 <label class="select-card selected" id="card-direct">
-                    <div class="card-left">
-                        <div class="check-indicator radio-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">直接手渡し</span>
-                            <span class="card-desc">次回集まりの際にお渡しします</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator radio-indicator"></div><div class="card-content"><span class="card-title">直接手渡し</span><span class="card-desc">次回集まりの際にお渡しします</span></div></div>
                     <span class="card-price">追加なし</span>
-                    <input type="radio" name="delivery" class="delivery-radio" value="0" data-code="" checked onchange="updateForm()">
+                    <input type="radio" name="delivery" class="delivery-radio" value="0" data-code="" checked onchange="window.updateForm()">
                 </label>
-
                 <label class="select-card" id="card-mail">
-                    <div class="card-left">
-                        <div class="check-indicator radio-indicator"></div>
-                        <div class="card-content">
-                            <span class="card-title">郵送 (クリックポスト)</span>
-                            <span class="card-desc">型番: CP</span>
-                        </div>
-                    </div>
+                    <div class="card-left"><div class="check-indicator radio-indicator"></div><div class="card-content"><span class="card-title">郵送 (クリックポスト)</span><span class="card-desc">型番: CP</span></div></div>
                     <span class="card-price">+ 185円</span>
-                    <input type="radio" name="delivery" class="delivery-radio" value="185" data-code="CP" onchange="updateForm()">
+                    <input type="radio" name="delivery" class="delivery-radio" value="185" data-code="CP" onchange="window.updateForm()">
                 </label>
-
             </div>
         </div>
 
         <div class="sticky-footer">
             <div class="sku-display" id="displaySku">構成: 読込中...</div>
-            <div class="total-row">
-                <span class="total-label">合計お支払い金額</span>
-                <div class="total-amount"><span id="displayTotal">0</span> <span>円</span></div>
-            </div>
-            
+            <div class="total-row"><span class="total-label">合計お支払い金額</span><div class="total-amount"><span id="displayTotal">0</span> <span>円</span></div></div>
             <div class="button-group">
-                <button type="button" class="action-btn btn-print" id="btnPrint" onclick="executeAction('print')">
-                    📄 PDF出力 (手渡し申込用)
-                </button>
-                <button type="button" class="action-btn btn-mail" id="btnMail" onclick="executeAction('mail')">
-                    ✉️ メールで注文を送信する
-                </button>
+                <button type="button" class="action-btn btn-print" id="btnPrint" onclick="window.executeAction('print')">📄 PDF出力 (手渡し用)</button>
+                <button type="button" class="action-btn btn-mail" id="btnMail" onclick="window.executeAction('mail')">✉️ 注文を送信する</button>
             </div>
         </div>
     </div>
@@ -618,42 +268,37 @@
         <div class="ticket">
             <div class="ticket-title">Sirius商店 注文申込書</div>
             <div class="ticket-sku" id="printSku">---</div>
-            
-            <div class="ticket-row">
-                <span style="font-weight: 700;">お名前</span>
-                <span id="printName">未入力</span>
-            </div>
-            
-            <div class="ticket-row" id="printAddressRow" style="display: none;">
-                <span style="font-weight: 700;">ご住所</span>
-                <span id="printAddress" style="text-align: right; white-space: pre-wrap;"></span>
-            </div>
-            
+            <div class="ticket-row"><span style="font-weight: 700;">お名前</span><span id="printName">未入力</span></div>
+            <div class="ticket-row" id="printAddressRow" style="display: none;"><span style="font-weight: 700;">ご住所</span><span id="printAddress" style="text-align: right; white-space: pre-wrap;"></span></div>
             <div style="margin-top: 24px; margin-bottom: 8px; font-weight: 700;">ご注文内容・受取方法</div>
-            <div id="printItemsList">
-                </div>
-            
-            <div class="ticket-total">
-                合計金額: <span id="printPrice">0</span> 円
-            </div>
+            <div id="printItemsList"></div>
+            <div class="ticket-total">合計金額: <span id="printPrice">0</span> 円</div>
         </div>
-        <button class="back-btn" onclick="closePrintView()">入力画面に戻る</button>
+        <button class="back-btn" onclick="window.closePrintView()">入力画面に戻る</button>
     </div>
 
-    <script>
-        // =================================================================
-        // 【商品別 在庫管理スイッチ】
-        // ご指定の最新在庫ステータスに更新しました！
-        // =================================================================
-        const IN_STOCK = {
-            MAIN: true, // TJ3B USB-C化キット (DS-EG1009) ➔ あり
-            CON:  true, // ノイズキラーコンデンサ (CK-2) ➔ あり
-            XH:   true,  // JST純正 XHコネクタセット (XH-5) ➔ あり
-            UA1:  true,  // USB A to C コード (UA-1) ➔ あり
-            UC1:  false, // USB C to C コード (UC-1) ➔ なし
-            UC3:  true   // USB C to C コード [PD対応] (UC-3) ➔ あり
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // 提供されたFirebase設定
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIzF4TdncJN6CGg2CfYugvsTc7osbUojY",
+            authDomain: "rcjj-carcheck.firebaseapp.com",
+            projectId: "rcjj-carcheck",
+            storageBucket: "rcjj-carcheck.firebasestorage.app",
+            messagingSenderId: "2982921205",
+            appId: "1:2982921205:web:734df2f35ee2d94d81d6bc",
+            measurementId: "G-DTRR6D75KE"
         };
-        // =================================================================
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // 在庫設定
+        const IN_STOCK = { MAIN: false, CON: false, XH: true, UA1: true, UC1: false, UC3: true };
 
         let uniqueId = "";
         let currentSkuString = "";
@@ -666,239 +311,122 @@
         }
 
         function applyStockSettings() {
-            if (!IN_STOCK.MAIN && !IN_STOCK.CON && !IN_STOCK.XH) {
-                document.body.classList.add('is-soldout');
-            }
-
-            // キット本体
-            if (!IN_STOCK.MAIN) {
-                document.getElementById('card-main').classList.add('soldout-product');
-                document.getElementById('price-main').textContent = "売り切れ";
-                document.getElementById('check-main').checked = false;
-                document.getElementById('check-main').disabled = true;
-                document.getElementById('card-main').classList.remove('selected');
-            }
-            // コンデンサ
-            if (!IN_STOCK.CON) {
-                document.getElementById('card-con').classList.add('soldout-product');
-                document.getElementById('price-con').textContent = "売り切れ";
-                document.getElementById('check-con').checked = false;
-                document.getElementById('check-con').disabled = true;
-            }
-            // XHコネクタ
-            if (!IN_STOCK.XH) {
-                document.getElementById('card-xh').classList.add('soldout-product');
-                document.getElementById('price-xh').textContent = "売り切れ";
-                document.getElementById('check-xh').disabled = true;
-            }
-            // USBコード UA-1
-            if (!IN_STOCK.UA1) {
-                document.getElementById('card-ua1').classList.add('soldout-product');
-                document.getElementById('price-ua1').textContent = "売り切れ";
-                document.getElementById('check-ua1').disabled = true;
-            }
-            // USBコード UC-1
-            if (!IN_STOCK.UC1) {
-                document.getElementById('card-uc1').classList.add('soldout-product');
-                document.getElementById('price-uc1').textContent = "売り切れ";
-                document.getElementById('check-uc1').disabled = true;
-            }
-            // USBコード UC-3
-            if (!IN_STOCK.UC3) {
-                document.getElementById('card-uc3').classList.add('soldout-product');
-                document.getElementById('price-uc3').textContent = "売り切れ";
-                document.getElementById('check-uc3').disabled = true;
-            }
+            if (!IN_STOCK.MAIN && !IN_STOCK.CON && !IN_STOCK.XH) { document.body.classList.add('is-soldout'); }
+            if (!IN_STOCK.MAIN) { document.getElementById('card-main').classList.add('soldout-product'); document.getElementById('price-main').textContent = "売り切れ"; document.getElementById('check-main').checked = false; document.getElementById('check-main').disabled = true; document.getElementById('card-main').classList.remove('selected'); }
+            if (!IN_STOCK.CON) { document.getElementById('card-con').classList.add('soldout-product'); document.getElementById('price-con').textContent = "売り切れ"; document.getElementById('check-con').checked = false; document.getElementById('check-con').disabled = true; }
+            if (!IN_STOCK.XH) { document.getElementById('card-xh').classList.add('soldout-product'); document.getElementById('price-xh').textContent = "売り切れ"; document.getElementById('check-xh').disabled = true; }
+            if (!IN_STOCK.UA1) { document.getElementById('card-ua1').classList.add('soldout-product'); document.getElementById('price-ua1').textContent = "売り切れ"; document.getElementById('check-ua1').disabled = true; }
+            if (!IN_STOCK.UC1) { document.getElementById('card-uc1').classList.add('soldout-product'); document.getElementById('price-uc1').textContent = "売り切れ"; document.getElementById('check-uc1').disabled = true; }
+            if (!IN_STOCK.UC3) { document.getElementById('card-uc3').classList.add('soldout-product'); document.getElementById('price-uc3').textContent = "売り切れ"; document.getElementById('check-uc3').disabled = true; }
         }
 
-        function updateForm() {
+        // HTML側のイベントから呼べるようにwindowオブジェクトに登録
+        window.updateForm = function() {
             let totalPrice = 0;
             let skuParts = [];
-
             const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
             
             const products = document.querySelectorAll('.product-check');
             products.forEach(p => {
                 const card = p.closest('.select-card');
                 if (p.checked && !p.disabled) {
-                    card.classList.add('selected');
-                    totalPrice += parseInt(p.value, 10);
-                    skuParts.push(p.getAttribute('data-code'));
-                } else {
-                    card.classList.remove('selected');
-                }
+                    card.classList.add('selected'); totalPrice += parseInt(p.value, 10); skuParts.push(p.getAttribute('data-code'));
+                } else { card.classList.remove('selected'); }
             });
 
             const usbSection = document.getElementById('usbOptionsSection');
             const deliveryStepNum = document.getElementById('deliveryStepNum');
 
             if (isMainKitSelected) {
-                usbSection.classList.remove('hidden');
-                deliveryStepNum.textContent = "3";
-                
-                const usbOptions = document.querySelectorAll('.option-check');
-                usbOptions.forEach(opt => {
+                usbSection.classList.remove('hidden'); deliveryStepNum.textContent = "3";
+                document.querySelectorAll('.option-check').forEach(opt => {
                     const card = opt.closest('.select-card');
-                    if (opt.checked && !opt.disabled) {
-                        card.classList.add('selected');
-                        totalPrice += parseInt(opt.value, 10);
-                        skuParts.push(opt.getAttribute('data-code'));
-                    } else {
-                        card.classList.remove('selected');
-                    }
+                    if (opt.checked && !opt.disabled) { card.classList.add('selected'); totalPrice += parseInt(opt.value, 10); skuParts.push(opt.getAttribute('data-code')); } else { card.classList.remove('selected'); }
                 });
             } else {
-                usbSection.classList.add('hidden');
-                deliveryStepNum.textContent = "2";
-                
-                const usbOptions = document.querySelectorAll('.option-check');
-                usbOptions.forEach(opt => {
-                    opt.checked = false;
-                    opt.closest('.select-card').classList.remove('selected');
-                });
+                usbSection.classList.add('hidden'); deliveryStepNum.textContent = "2";
+                document.querySelectorAll('.option-check').forEach(opt => { opt.checked = false; opt.closest('.select-card').classList.remove('selected'); });
             }
 
             let isPostalSelected = false;
-            const deliveryRadios = document.querySelectorAll('.delivery-radio');
-            deliveryRadios.forEach(radio => {
+            document.querySelectorAll('.delivery-radio').forEach(radio => {
                 const card = radio.closest('.select-card');
                 if (radio.checked) {
-                    card.classList.add('selected');
-                    totalPrice += parseInt(radio.value, 10);
+                    card.classList.add('selected'); totalPrice += parseInt(radio.value, 10);
                     const code = radio.getAttribute('data-code');
-                    if (code) {
-                        skuParts.push(code);
-                    }
-                    if (code === "CP") {
-                        isPostalSelected = true;
-                    }
-                } else {
-                    card.classList.remove('selected');
-                }
+                    if (code) { skuParts.push(code); }
+                    if (code === "CP") { isPostalSelected = true; }
+                } else { card.classList.remove('selected'); }
             });
 
             document.getElementById('addressGroup').style.display = isPostalSelected ? 'block' : 'none';
-
-            if (skuParts.length === 0 || (skuParts.length === 1 && skuParts[0] === "CP")) {
-                currentSkuString = `[${uniqueId}] 未選択`;
-            } else {
-                currentSkuString = `[${uniqueId}] ${skuParts.join('+')}`;
-            }
+            currentSkuString = (skuParts.length === 0 || (skuParts.length === 1 && skuParts[0] === "CP")) ? `[${uniqueId}] 未選択` : `[${uniqueId}] ${skuParts.join('+')}`;
             document.getElementById('displaySku').textContent = `注文構成: ${currentSkuString}`;
             document.getElementById('displayTotal').textContent = totalPrice.toLocaleString('ja-JP');
-        }
+        };
 
-        function executeAction(type) {
+        window.executeAction = async function(type) {
             const name = document.getElementById('buyerName').value.trim();
-            if (!name) {
-                alert("お名前を入力してください。");
-                document.getElementById('buyerName').focus();
-                return;
-            }
-
+            if (!name) { alert("お名前を入力してください。"); document.getElementById('buyerName').focus(); return; }
             const checkedProducts = document.querySelectorAll('.product-check:checked');
-            if (checkedProducts.length === 0) {
-                alert("商品が選択されていません。購入するパーツにチェックを入れてください。");
-                return;
-            }
-
+            if (checkedProducts.length === 0) { alert("商品が選択されていません。"); return; }
             const checkedDelivery = document.querySelector('.delivery-radio:checked');
             const isPostal = checkedDelivery.getAttribute('data-code') === "CP";
             const address = document.getElementById('buyerAddress').value.trim();
+            if (isPostal && !address) { alert("お届け先住所を入力してください。"); document.getElementById('buyerAddress').focus(); return; }
 
-            if (isPostal && !address) {
-                alert("郵送をご希望の場合は、お届け先住所を入力してください。");
-                document.getElementById('buyerAddress').focus();
-                return;
-            }
-
-            const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
-            if (isMainKitSelected) {
-                window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank");
-            }
-
-            const totalPrice = document.getElementById('displayTotal').textContent;
+            const totalPriceStr = document.getElementById('displayTotal').textContent;
             const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
 
-            let itemsTextForMail = "";
-            let itemsHtmlForPrint = "";
-            
-            checkedProducts.forEach(p => {
-                const title = p.closest('.select-card').querySelector('.card-title').textContent;
-                const price = p.value;
-                itemsTextForMail += `・${title} (${price}円)\n`;
-                itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>${price}円</span></div>`;
-            });
-
-            if (isMainKitSelected) {
-                const checkedOptions = document.querySelectorAll('.option-check:checked');
-                checkedOptions.forEach(opt => {
-                    if (!opt.disabled) {
-                        const title = opt.closest('.select-card').querySelector('.card-title').textContent;
-                        const price = opt.value;
-                        itemsTextForMail += `— [追加オプション] ${title} (+${price}円)\n`;
-                        itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`;
-                    }
+            // --- 💡 Firestoreへのデータ保存処理 ---
+            document.getElementById('loadingOverlay').style.display = 'flex'; // ローディング表示
+            try {
+                // "orders" コレクションに、4桁の uniqueId をドキュメントIDとしてデータを保存
+                await setDoc(doc(db, "orders", uniqueId), {
+                    orderId: uniqueId,
+                    name: name,
+                    sku: currentSkuString,
+                    delivery: deliveryName,
+                    price: totalPriceStr + "円",
+                    address: isPostal ? address : "直接手渡し",
+                    timestamp: serverTimestamp() // Firestoreのサーバー時間
                 });
+            } catch (error) {
+                console.error("Firestore Error: ", error);
+                alert("データベースへの保存に失敗しました。通信環境を確認してください。");
+                document.getElementById('loadingOverlay').style.display = 'none';
+                return; // 保存失敗時は進めない
             }
+            document.getElementById('loadingOverlay').style.display = 'none';
+            // ------------------------------------
 
+            const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
+            if (isMainKitSelected) { window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank"); }
+
+            let itemsTextForMail = ""; let itemsHtmlForPrint = "";
+            checkedProducts.forEach(p => { const title = p.closest('.select-card').querySelector('.card-title').textContent; const price = p.value; itemsTextForMail += `・${title} (${price}円)\n`; itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>${price}円</span></div>`; });
+            if (isMainKitSelected) {
+                document.querySelectorAll('.option-check:checked').forEach(opt => { if (!opt.disabled) { const title = opt.closest('.select-card').querySelector('.card-title').textContent; const price = opt.value; itemsTextForMail += `— [追加] ${title} (+${price}円)\n`; itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`; } });
+            }
             const deliveryPrice = checkedDelivery.value;
-            itemsTextForMail += `・受取方法: ${deliveryName}\n`;
-            itemsHtmlForPrint += `<div class="ticket-row"><span style="color: #64748b;">受取: ${deliveryName}</span><span style="color: #64748b;">+${deliveryPrice}円</span></div>`;
+            itemsTextForMail += `・受取方法: ${deliveryName}\n`; itemsHtmlForPrint += `<div class="ticket-row"><span style="color: #64748b;">受取: ${deliveryName}</span><span style="color: #64748b;">+${deliveryPrice}円</span></div>`;
 
             if (type === 'print') {
-                document.getElementById('printSku').textContent = currentSkuString;
-                document.getElementById('printName').textContent = name;
-                document.getElementById('printItemsList').innerHTML = itemsHtmlForPrint;
-                document.getElementById('printPrice').textContent = totalPrice;
-                
-                if (isPostal && address) {
-                    document.getElementById('printAddressRow').style.display = 'flex';
-                    document.getElementById('printAddress').textContent = address;
-                } else {
-                    document.getElementById('printAddressRow').style.display = 'none';
-                }
-                
-                document.getElementById('appContainer').style.display = 'none';
-                document.getElementById('printContainer').style.display = 'block';
-                
+                document.getElementById('printSku').textContent = currentSkuString; document.getElementById('printName').textContent = name; document.getElementById('printItemsList').innerHTML = itemsHtmlForPrint; document.getElementById('printPrice').textContent = totalPriceStr;
+                if (isPostal && address) { document.getElementById('printAddressRow').style.display = 'flex'; document.getElementById('printAddress').textContent = address; } else { document.getElementById('printAddressRow').style.display = 'none'; }
+                document.getElementById('appContainer').style.display = 'none'; document.getElementById('printContainer').style.display = 'block';
                 setTimeout(() => { window.print(); }, 300);
-
             } else if (type === 'mail') {
-                const targetEmail = "shtgames.shop@gmail.com"; 
-                const subject = encodeURIComponent(`【注文】Sirius商店 ${currentSkuString}`);
-                
-                let addressSection = "";
-                if (isPostal) {
-                    addressSection = `【お届け先住所】\n${address}\n\n`;
-                }
-
-                const body = encodeURIComponent(
-                    `注文をお願いします。\n\n` +
-                    `【管理コード】\n${currentSkuString}\n\n` +
-                    `【お名前】 ${name}\n\n` +
-                    `【ご注文内容】\n${itemsTextForMail}\n` +
-                    `【合計金額】 ${totalPrice}円\n\n` +
-                    addressSection +
-                    `※決済はロボカップ会の練習会での現金の手渡しとなります。\n` +
-                    `※このメールは受取時に確認させていただく場合がございますので、当日まで大切に保管し、会場にてご提示ください。`
-                );
-                
+                const targetEmail = "shtgames.shop@gmail.com"; const subject = encodeURIComponent(`【注文】Sirius商店 ${currentSkuString}`);
+                let addressSection = isPostal ? `【お届け先住所】\n${address}\n\n` : "";
+                const body = encodeURIComponent(`注文をお願いします。\n\n【管理コード】\n${currentSkuString}\n\n【お名前】 ${name}\n\n【ご注文内容】\n${itemsTextForMail}\n【合計金額】 ${totalPriceStr}円\n\n${addressSection}※決済はロボカップ会の練習会での現金の手渡しとなります。\n※このメールは受取時に確認させていただく場合がございますので、当日まで大切に保管し、会場にてご提示ください。`);
                 window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
             }
-        }
-
-        function closePrintView() {
-            document.getElementById('printContainer').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'block';
-        }
-
-        window.onload = () => {
-            generateUniqueId();
-            applyStockSettings();
-            updateForm();
         };
-    </script>
 
+        window.closePrintView = function() { document.getElementById('printContainer').style.display = 'none'; document.getElementById('appContainer').style.display = 'block'; };
+
+        window.onload = () => { generateUniqueId(); applyStockSettings(); window.updateForm(); };
+    </script>
 </body>
 </html>
