@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TJ3B USB化キット 注文フォーム</title>
+    <title>Sirius商店 注文フォーム</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -64,7 +64,6 @@
             letter-spacing: 1px;
         }
 
-        /* メイン商品売り切れ時にフォーム全体をロックする効果 */
         body.is-soldout .soldout-banner {
             display: block;
         }
@@ -87,7 +86,32 @@
             margin-bottom: 24px;
             box-shadow: var(--shadow-sm);
             border: 1px solid #e2e8f0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* 動的表示用のスライドアニメーション設定 */
+        .fade-section {
+            max-height: 1000px;
+            opacity: 1;
+            transform: translateY(0);
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.3s ease, 
+                        margin 0.4s ease, 
+                        padding 0.4s ease, 
+                        border 0.4s ease;
+        }
+
+        .fade-section.hidden {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-top-width: 0;
+            border-bottom-width: 0;
+            pointer-events: none;
         }
 
         .step-title {
@@ -115,7 +139,6 @@
         /* 入力フォーム */
         .input-group {
             margin-bottom: 20px;
-            transition: all 0.3s ease;
         }
 
         .input-group label {
@@ -161,7 +184,7 @@
             box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
         }
 
-        /* 選択カードのデザイン */
+        /* 選択カード */
         .card-grid {
             display: grid;
             gap: 16px;
@@ -217,11 +240,11 @@
             white-space: nowrap;
         }
 
-        /* 商品個別売り切れ用の特別スタイル */
+        /* 売り切れスタイル */
         .select-card.soldout-product {
             opacity: 0.5;
             cursor: not-allowed;
-            pointer-events: none; /* クリックを物理的にロック */
+            pointer-events: none;
             background-color: #f1f5f9;
             border-color: #cbd5e1;
         }
@@ -230,19 +253,13 @@
             color: var(--text-muted);
         }
 
-        /* 選択状態のスタイル */
+        /* 選択状態 */
         .select-card.selected {
             border-color: var(--primary);
             background-color: #f0f9ff;
         }
-        
-        .select-card.locked {
-            border-color: var(--primary);
-            background-color: #f0f9ff;
-            cursor: default;
-        }
 
-        /* カスタムチェックボックス/ラジオボタンの見た目 */
+        /* インジケータ */
         .check-indicator {
             width: 22px;
             height: 22px;
@@ -285,7 +302,7 @@
             align-items: center;
         }
 
-        /* ステータスバー */
+        /* 固定ステータスバー */
         .sticky-footer {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -441,10 +458,10 @@
     <div class="container" id="appContainer">
         
         <div class="soldout-banner">
-            ⚠️ 只今売り切れ中です（次回入荷をお待ちください）
+            ⚠️ 只今主要パーツが売り切れ中です（次回入荷をお待ちください）
         </div>
 
-        <h1 class="header-title">TJ3B USB化キット 注文フォーム</h1>
+        <h1 class="header-title">Sirius商店 注文フォーム</h1>
 
         <div class="step-section">
             <h2 class="step-title"><span class="step-number">0</span> お客様情報</h2>
@@ -460,24 +477,50 @@
         </div>
 
         <div class="step-section">
-            <h2 class="step-title"><span class="step-number">1</span> メイン商品の確認</h2>
+            <h2 class="step-title"><span class="step-number">1</span> 商品の選択 (複数選択可能)</h2>
             <div class="card-grid">
-                <label class="select-card locked selected" id="card-main">
+                
+                <label class="select-card selected" id="card-main">
                     <div class="card-left">
                         <div class="check-indicator"></div>
                         <div class="card-content">
-                            <span class="card-title">TJ3B USB化キット</span>
-                            <span class="card-desc">DAISENロボットキット向け (DS-EG1009)</span>
+                            <span class="card-title">TJ3B USB-C化キット</span>
+                            <span class="card-desc">DAISENロボットキット向け (型番: DS-EG1009)</span>
                         </div>
                     </div>
                     <span class="card-price" id="price-main">990円</span>
-                    <input type="checkbox" id="mainItem" value="990" data-code="DS-EG1009" checked disabled>
+                    <input type="checkbox" class="product-check" id="check-main" value="990" data-code="DS-EG1009" checked onchange="updateForm()">
                 </label>
+
+                <label class="select-card" id="card-con">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個)</span>
+                            <span class="card-desc">型番: CK-2 (0.1μF 50V モーターの火花ノイズ対策)</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-con">50円</span>
+                    <input type="checkbox" class="product-check" id="check-con" value="50" data-code="CK-2" onchange="updateForm()">
+                </label>
+
+                <label class="select-card" id="card-xh">
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">JST純正 XHコネクタ 2種5個セット</span>
+                            <span class="card-desc">型番: XH-5 (日本圧着端子製造製 ポスト×5 / ハウジング×5)</span>
+                        </div>
+                    </div>
+                    <span class="card-price" id="price-xh">200円</span>
+                    <input type="checkbox" class="product-check" id="check-xh" value="200" data-code="XH-5" onchange="updateForm()">
+                </label>
+
             </div>
         </div>
 
-        <div class="step-section">
-            <h2 class="step-title"><span class="step-number">2</span> オプションの選択 (複数可)</h2>
+        <div class="step-section fade-section" id="usbOptionsSection">
+            <h2 class="step-title"><span class="step-number">2</span> USBコードの追加オプション (複数選択可能)</h2>
             <div class="card-grid">
                 
                 <label class="select-card" id="card-ua1">
@@ -485,7 +528,7 @@
                         <div class="check-indicator"></div>
                         <div class="card-content">
                             <span class="card-title">USB A to C コード [通信向け]</span>
-                            <span class="card-desc">型番: UA-1</span>
+                            <span class="card-desc">型番: UA-1 (12W対応)</span>
                         </div>
                     </div>
                     <span class="card-price" id="price-ua1">+ 150円</span>
@@ -509,7 +552,7 @@
                         <div class="check-indicator"></div>
                         <div class="card-content">
                             <span class="card-title">USB C to C コード [PD対応]</span>
-                            <span class="card-desc">型番: UC-3</span>
+                            <span class="card-desc">型番: UC-3 (PD60W対応)</span>
                         </div>
                     </div>
                     <span class="card-price" id="price-uc3">+ 770円</span>
@@ -520,7 +563,7 @@
         </div>
 
         <div class="step-section">
-            <h2 class="step-title"><span class="step-number">3</span> 受取方法の選択</h2>
+            <h2 class="step-title"><span class="step-number" id="deliveryStepNum">3</span> 受取方法の選択</h2>
             <div class="card-grid">
                 
                 <label class="select-card selected" id="card-direct">
@@ -554,7 +597,7 @@
             <div class="sku-display" id="displaySku">構成: 読込中...</div>
             <div class="total-row">
                 <span class="total-label">合計お支払い金額</span>
-                <div class="total-amount"><span id="displayTotal">990</span> <span>円</span></div>
+                <div class="total-amount"><span id="displayTotal">0</span> <span>円</span></div>
             </div>
             
             <div class="button-group">
@@ -570,7 +613,7 @@
 
     <div class="print-container" id="printContainer">
         <div class="ticket">
-            <div class="ticket-title">TJ3Bキット 注文申込書</div>
+            <div class="ticket-title">Sirius商店 注文申込書</div>
             <div class="ticket-sku" id="printSku">---</div>
             
             <div class="ticket-row">
@@ -588,7 +631,7 @@
                 </div>
             
             <div class="ticket-total">
-                合計金額: <span id="printPrice">990</span> 円
+                合計金額: <span id="printPrice">0</span> 円
             </div>
         </div>
         <button class="back-btn" onclick="closePrintView()">入力画面に戻る</button>
@@ -596,24 +639,22 @@
 
     <script>
         // =================================================================
-        // 【商品別 在庫・売り切れ管理スイッチ】
-        // 在庫あり ➔ true  /  売り切れ(在庫なし) ➔ false に書き換えるだけ！
+        // 【商品別 在庫管理スイッチ】
+        // 在庫あり ➔ true  /  売り切れ(在庫なし) ➔ false
         // =================================================================
         const IN_STOCK = {
-            MAIN: true,  // キット本体 (DS-EG1009)
+            MAIN: true,  // TJ3B USB-C化キット (DS-EG1009)
+            CON:  true,  // ノイズキラーコンデンサ (CK-2)
+            XH:   true,  // JST純正 XHコネクタセット (XH-5)
             UA1:  true,  // USB A to C コード (UA-1)
-            UC1:  false,  // USB C to C コード (UC-1)
-            UC3:  false  // USB C to C コード [PD対応] (UC-3)  ◀例として初期状態を売り切れにしています
+            UC1:  true,  // USB C to C コード (UC-1)
+            UC3:  false  // USB C to C コード [PD対応] (UC-3)
         };
         // =================================================================
 
-        const BASE_PRICE = 990;
-        const BASE_SKU = "DS-EG1009";
-        
         let uniqueId = "";
         let currentSkuString = "";
 
-        // 4桁のユニークID生成
         function generateUniqueId() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             for (let i = 0; i < 4; i++) {
@@ -621,31 +662,44 @@
             }
         }
 
-        // 冒頭の設定(IN_STOCK)を読み込んで画面UIに適用する関数
         function applyStockSettings() {
-            // 1. キット本体 (メイン商品) のチェック
-            if (!IN_STOCK.MAIN) {
-                document.body.classList.add('is-soldout'); // 全体を売り切れモードにロック
-                document.getElementById('card-main').classList.add('soldout-product');
-                document.getElementById('price-main').textContent = "売り切れ";
-                document.getElementById('mainItem').checked = false;
+            if (!IN_STOCK.MAIN && !IN_STOCK.CON && !IN_STOCK.XH) {
+                document.body.classList.add('is-soldout');
             }
 
-            // 2. オプション UA-1 のチェック
+            // キット本体
+            if (!IN_STOCK.MAIN) {
+                document.getElementById('card-main').classList.add('soldout-product');
+                document.getElementById('price-main').textContent = "売り切れ";
+                document.getElementById('check-main').checked = false;
+                document.getElementById('check-main').disabled = true;
+                document.getElementById('card-main').classList.remove('selected');
+            }
+            // コンデンサ
+            if (!IN_STOCK.CON) {
+                document.getElementById('card-con').classList.add('soldout-product');
+                document.getElementById('price-con').textContent = "売り切れ";
+                document.getElementById('check-con').disabled = true;
+            }
+            // XHコネクタ
+            if (!IN_STOCK.XH) {
+                document.getElementById('card-xh').classList.add('soldout-product');
+                document.getElementById('price-xh').textContent = "売り切れ";
+                document.getElementById('check-xh').disabled = true;
+            }
+            // USBコード UA-1
             if (!IN_STOCK.UA1) {
                 document.getElementById('card-ua1').classList.add('soldout-product');
                 document.getElementById('price-ua1').textContent = "売り切れ";
                 document.getElementById('check-ua1').disabled = true;
             }
-
-            // 3. オプション UC-1 のチェック
+            // USBコード UC-1
             if (!IN_STOCK.UC1) {
                 document.getElementById('card-uc1').classList.add('soldout-product');
                 document.getElementById('price-uc1').textContent = "売り切れ";
                 document.getElementById('check-uc1').disabled = true;
             }
-
-            // 4. オプション UC-3 のチェック
+            // USBコード UC-3
             if (!IN_STOCK.UC3) {
                 document.getElementById('card-uc3').classList.add('soldout-product');
                 document.getElementById('price-uc3').textContent = "売り切れ";
@@ -653,32 +707,56 @@
             }
         }
 
-        // フォームの状態を更新するメイン関数
         function updateForm() {
-            // メインが売り切れの場合は計算処理をスキップ
-            if (!IN_STOCK.MAIN) {
-                document.getElementById('displaySku').textContent = "売り切れ";
-                document.getElementById('displayTotal').textContent = "0";
-                return;
-            }
+            let totalPrice = 0;
+            let skuParts = [];
 
-            let totalPrice = BASE_PRICE;
-            let skuParts = [BASE_SKU];
-
-            // オプション商品の集計 (チェックボックスが有効かつ選択されているもの)
-            const options = document.querySelectorAll('.option-check');
-            options.forEach(opt => {
-                const card = opt.closest('.select-card');
-                if (opt.checked && !opt.disabled) {
+            // 1. メイン商品群の集計とチェック状態取得
+            const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
+            
+            const products = document.querySelectorAll('.product-check');
+            products.forEach(p => {
+                const card = p.closest('.select-card');
+                if (p.checked && !p.disabled) {
                     card.classList.add('selected');
-                    totalPrice += parseInt(opt.value, 10);
-                    skuParts.push(opt.getAttribute('data-code'));
+                    totalPrice += parseInt(p.value, 10);
+                    skuParts.push(p.getAttribute('data-code'));
                 } else {
                     card.classList.remove('selected');
                 }
             });
 
-            // 受取方法の集計と住所欄の表示切り替え
+            // 2. キット選択状態に応じたUSBオプションエリアの動的制御
+            const usbSection = document.getElementById('usbOptionsSection');
+            const deliveryStepNum = document.getElementById('deliveryStepNum');
+
+            if (isMainKitSelected) {
+                usbSection.classList.remove('hidden');
+                deliveryStepNum.textContent = "3";
+                
+                const usbOptions = document.querySelectorAll('.option-check');
+                usbOptions.forEach(opt => {
+                    const card = opt.closest('.select-card');
+                    if (opt.checked && !opt.disabled) {
+                        card.classList.add('selected');
+                        totalPrice += parseInt(opt.value, 10);
+                        skuParts.push(opt.getAttribute('data-code'));
+                    } else {
+                        card.classList.remove('selected');
+                    }
+                });
+            } else {
+                usbSection.classList.add('hidden');
+                deliveryStepNum.textContent = "2";
+                
+                const usbOptions = document.querySelectorAll('.option-check');
+                usbOptions.forEach(opt => {
+                    opt.checked = false;
+                    opt.closest('.select-card').classList.remove('selected');
+                });
+            }
+
+            // 3. 受取方法の集計
             let isPostalSelected = false;
             const deliveryRadios = document.querySelectorAll('.delivery-radio');
             deliveryRadios.forEach(radio => {
@@ -700,23 +778,27 @@
 
             document.getElementById('addressGroup').style.display = isPostalSelected ? 'block' : 'none';
 
-            // 画面への反映
-            currentSkuString = `[${uniqueId}] ${skuParts.join('+')}`;
+            // SKUの文字列生成とフッター反映
+            if (skuParts.length === 0 || (skuParts.length === 1 && skuParts[0] === "CP")) {
+                currentSkuString = `[${uniqueId}] 未選択`;
+            } else {
+                currentSkuString = `[${uniqueId}] ${skuParts.join('+')}`;
+            }
             document.getElementById('displaySku').textContent = `注文構成: ${currentSkuString}`;
             document.getElementById('displayTotal').textContent = totalPrice.toLocaleString('ja-JP');
         }
 
-        // アクション実行
         function executeAction(type) {
-            if (document.body.classList.contains('is-soldout') || !IN_STOCK.MAIN) {
-                alert("只今売り切れ中のため、注文は受け付けておりません。");
-                return;
-            }
-
             const name = document.getElementById('buyerName').value.trim();
             if (!name) {
                 alert("お名前を入力してください。");
                 document.getElementById('buyerName').focus();
+                return;
+            }
+
+            const checkedProducts = document.querySelectorAll('.product-check:checked');
+            if (checkedProducts.length === 0) {
+                alert("商品が選択されていません。購入するパーツにチェックを入れてください。");
                 return;
             }
 
@@ -730,24 +812,39 @@
                 return;
             }
 
+            // ★【新規追加機能】キットを含む注文時にマニュアルURLを別タブで自動オープンするロジック
+            const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
+            if (isMainKitSelected) {
+                window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank");
+            }
+
             const totalPrice = document.getElementById('displayTotal').textContent;
             const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
 
-            let itemsTextForMail = `・TJ3B USB化キット (DS-EG1009)\n`;
-            let itemsHtmlForPrint = `<div class="ticket-row"><span>TJ3B USB化キット</span><span>990円</span></div>`;
+            let itemsTextForMail = "";
+            let itemsHtmlForPrint = "";
             
-            const options = document.querySelectorAll('.option-check:checked');
-            options.forEach(opt => {
-                if (!opt.disabled) {
-                    const title = opt.closest('.select-card').querySelector('.card-title').textContent;
-                    const price = opt.value;
-                    itemsTextForMail += `・${title}\n`;
-                    itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`;
-                }
+            checkedProducts.forEach(p => {
+                const title = p.closest('.select-card').querySelector('.card-title').textContent;
+                const price = p.value;
+                itemsTextForMail += `・${title} (${price}円)\n`;
+                itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>${price}円</span></div>`;
             });
 
+            if (isMainKitSelected) {
+                const checkedOptions = document.querySelectorAll('.option-check:checked');
+                checkedOptions.forEach(opt => {
+                    if (!opt.disabled) {
+                        const title = opt.closest('.select-card').querySelector('.card-title').textContent;
+                        const price = opt.value;
+                        itemsTextForMail += `・[オプション] ${title} (+${price}円)\n`;
+                        itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`;
+                    }
+                });
+            }
+
             const deliveryPrice = checkedDelivery.value;
-            itemsTextForMail += `・受取: ${deliveryName}\n`;
+            itemsTextForMail += `・受取方法: ${deliveryName}\n`;
             itemsHtmlForPrint += `<div class="ticket-row"><span style="color: #64748b;">受取: ${deliveryName}</span><span style="color: #64748b;">+${deliveryPrice}円</span></div>`;
 
             if (type === 'print') {
@@ -770,7 +867,7 @@
 
             } else if (type === 'mail') {
                 const targetEmail = "shtgames.shop@gmail.com"; 
-                const subject = encodeURIComponent(`【注文】TJ3Bキット ${currentSkuString}`);
+                const subject = encodeURIComponent(`【注文】Sirius商店 ${currentSkuString}`);
                 
                 let addressSection = "";
                 if (isPostal) {
@@ -778,7 +875,7 @@
                 }
 
                 const body = encodeURIComponent(
-                    `TJ3Bキットの注文をお願いします。\n\n` +
+                    `注文をお願いします。\n\n` +
                     `【管理コード】\n${currentSkuString}\n\n` +
                     `【お名前】 ${name}\n\n` +
                     `【ご注文内容】\n${itemsTextForMail}\n` +
@@ -799,7 +896,7 @@
 
         window.onload = () => {
             generateUniqueId();
-            applyStockSettings(); // 1番最初に在庫状況をUIに反映
+            applyStockSettings();
             updateForm();
         };
     </script>
