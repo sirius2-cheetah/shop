@@ -342,6 +342,74 @@
             margin-bottom: 0;
         }
 
+        /* AIサポートバナー */
+        .ai-support-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            border: 2px solid #bae6fd;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-support-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #0ea5e9, #8b5cf6, #ec4899);
+        }
+
+        .ai-support-icon {
+            font-size: 40px;
+            line-height: 1;
+            background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ai-support-text {
+            flex: 1;
+        }
+
+        .ai-support-text h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .ai-support-text p {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 0;
+        }
+
+        .ai-btn {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+        }
+
         /* フッター */
         .footer {
             text-align: center;
@@ -359,6 +427,8 @@
             .pin-name { width: 100%; margin-bottom: 4px; }
             .wiring-row { flex-direction: column; align-items: flex-start; margin-bottom: 16px; }
             .pin-arrow { display: none; }
+            .ai-support-card { flex-direction: column; text-align: center; padding: 20px; }
+            .ai-btn { width: 100%; }
         }
     </style>
 </head>
@@ -369,7 +439,7 @@
         <header class="header">
             <h1>TJ3B USB-C化キット 取扱マニュアル</h1>
             <p>本キットは、ダイセン製ロボットキット「TJ3B」の通信ポートを、現代の安定したUSB Type-C仕様（TTLダイレクト通信）にアップグレードするためのモジュールキットです。</p>
-            <div class="model-badge">対応キット構成: DS-EG1009</div>
+            <div class="model-badge">対応キット構成: DS-EG1009 / DS-EG1010</div>
         </header>
 
         <section class="section">
@@ -503,6 +573,18 @@
                     ➔ ロボットの後ろ側列の、L側から3番目（TX）と4番目（RX）の配線が逆になっている可能性が非常に高いです。5番目と6番目の間にあるコンデンサ「C1」の位置を基準に、もう一度ランドの数え方を確認してください。
                 </p>
             </div>
+
+            <!-- ★ここに追加：専用AIアシスタントへの誘導バナー★ -->
+            <div class="ai-support-card">
+                <div class="ai-support-icon">✨</div>
+                <div class="ai-support-text">
+                    <h3>分からないことはAI窓口へ！</h3>
+                    <p>上記を確認しても解決しない場合や、配線に迷ったときは「DS-EG1009/1010専用 AIアシスタント」が24時間いつでも質問にお答えします。</p>
+                </div>
+                <a href="https://gemini.google.com/gem/1tK0al_tQDBlUcpz_863gGKUXEsRsJis3?usp=sharing" target="_blank" class="ai-btn">AIに質問する</a>
+            </div>
+            <!-- ★追加ここまで★ -->
+            
         </section>
 
         <footer class="footer">
