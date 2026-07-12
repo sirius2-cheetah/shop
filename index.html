@@ -51,7 +51,6 @@
         .select-card:hover { border-color: #94a3b8; background-color: #f8fafc; }
         .select-card input[type="checkbox"], .select-card input[type="radio"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
         
-        /* 売り切れ時のカード（詳細は見れるようにpointer-eventsは外す） */
         .select-card.soldout-product { opacity: 0.6; background-color: #f1f5f9; border-color: #cbd5e1; cursor: default; }
         .select-card.soldout-product .card-price { color: var(--text-muted); }
         .select-card.selected { border-color: var(--primary); background-color: #f0f9ff; }
@@ -61,7 +60,6 @@
         .card-desc { font-size: 13px; color: var(--text-muted); font-family: monospace; font-weight: 500; }
         .card-price { font-weight: 700; font-size: 16px; color: var(--primary); white-space: nowrap; }
 
-        /* 「詳細を見る」ボタン */
         .info-btn { display: inline-block; font-size: 12px; color: var(--primary); background-color: #e0f2fe; padding: 4px 12px; border-radius: 20px; font-weight: 700; margin-top: 6px; transition: background-color 0.2s; cursor: pointer; border: 1px solid #bae6fd; }
         .info-btn:hover { background-color: #bae6fd; }
 
@@ -81,7 +79,6 @@
         .button-group { display: flex; gap: 12px; }
         .action-btn { flex: 1; padding: 14px; font-size: 16px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; color: white; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-print { background-color: var(--success); }
         .btn-mail { background-color: var(--primary); }
         
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 100; justify-content: center; align-items: center; font-size: 20px; font-weight: 700; color: var(--primary); }
@@ -102,22 +99,26 @@
         .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; margin-bottom: 20px; transition: color 0.2s; cursor: pointer; }
         .back-link:hover { color: var(--primary); }
 
-        @media (max-width: 480px) { .button-group { flex-direction: column; } .detail-container { padding: 20px; } }
+        /* =========================================
+           確認画面 のスタイル
+           ========================================= */
+        .confirm-container { display: none; background: var(--card-bg); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-md); border: 1px solid var(--border); max-width: 680px; margin: 0 auto; }
+        .confirm-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; }
+        .confirm-section { margin-bottom: 28px; }
+        .confirm-section h3 { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .confirm-section h3::before { content: ""; display: inline-block; width: 4px; height: 16px; background-color: var(--primary); border-radius: 2px; }
+        .confirm-row { display: flex; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; margin-bottom: 10px; font-size: 15px; }
+        .confirm-total-box { margin-top: 16px; text-align: right; }
+        .confirm-total { font-size: 32px; font-weight: 700; color: var(--primary); line-height: 1; }
+        .confirm-info p { margin-bottom: 8px; font-size: 15px; }
+        .confirm-notes { background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 0 12px 12px 0; font-size: 14px; margin-bottom: 32px; line-height: 1.6; }
 
-        /* 印刷用画面スタイル */
-        .print-container { display: none; background-color: white; max-width: 800px; margin: 0 auto; }
-        .ticket { border: 2px solid #0f172a; padding: 40px; border-radius: 12px; }
-        .ticket-title { text-align: center; font-size: 28px; font-weight: 700; margin-bottom: 10px; }
-        .ticket-sku { text-align: center; font-family: monospace; font-size: 18px; color: var(--text-muted); margin-bottom: 30px; border-bottom: 2px solid #0f172a; padding-bottom: 20px; }
-        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 16px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
-        .ticket-total { font-size: 24px; font-weight: 700; text-align: right; margin-top: 30px; }
-        .print-back-btn { display: block; margin: 20px auto; padding: 12px 24px; background-color: var(--text-muted); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        @media print { body { padding: 0; background-color: white; } .container, .detail-view { display: none !important; } .print-container { display: block !important; } .print-back-btn { display: none !important; } .ticket { border: 1px solid #000; padding: 20px; } }
+        @media (max-width: 480px) { .button-group { flex-direction: column; } .detail-container, .confirm-container { padding: 20px; } }
     </style>
 </head>
 <body>
 
-    <div id="loadingOverlay" class="loading-overlay">データを送信中...</div>
+    <div id="loadingOverlay" class="loading-overlay">処理中...</div>
 
     <!-- ============================================== -->
     <!-- 注文フォーム画面（デフォルト表示） -->
@@ -246,8 +247,7 @@
             <div class="sku-display" id="displaySku">構成: 読込中...</div>
             <div class="total-row"><span class="total-label">合計お支払い金額</span><div class="total-amount"><span id="displayTotal">0</span> <span>円</span></div></div>
             <div class="button-group">
-                <button type="button" class="action-btn btn-print" id="btnPrint" onclick="window.executeAction('print')">📄 PDF出力 (手渡し用)</button>
-                <button type="button" class="action-btn btn-mail" id="btnMail" onclick="window.executeAction('mail')">✉️ 注文を送信する</button>
+                <button type="button" class="action-btn btn-mail" onclick="window.showConfirmView()">✉️ 注文内容を確認する</button>
             </div>
         </div>
     </div>
@@ -261,7 +261,6 @@
         
         <div class="detail-container">
             <div class="detail-layout">
-                <!-- 左側：画像プレースホルダー -->
                 <div class="detail-image-placeholder">
                     <div style="text-align: center;">
                         <span style="font-size: 48px;">📦</span><br>
@@ -269,14 +268,12 @@
                     </div>
                 </div>
                 
-                <!-- 右側：商品情報とカートボタン -->
                 <div class="detail-info">
                     <h2 class="detail-title" id="detailName">---</h2>
                     <div class="detail-sku-badge" id="detailSkuBadge">型番: ---</div>
                     
                     <div class="detail-price" id="detailPrice">---円</div>
                     
-                    <!-- 在庫バッジ -->
                     <div id="detailStockBadge" style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: 700; font-size: 13px; margin-bottom: 20px;"></div>
 
                     <div class="detail-desc" id="detailDesc">---</div>
@@ -292,19 +289,54 @@
 
 
     <!-- ============================================== -->
-    <!-- 印刷用画面 -->
+    <!-- 確認画面（メール送信前） -->
     <!-- ============================================== -->
-    <div class="print-container" id="printContainer">
-        <div class="ticket">
-            <div class="ticket-title">Sirius商店 注文申込書</div>
-            <div class="ticket-sku" id="printSku">---</div>
-            <div class="ticket-row"><span style="font-weight: 700;">お名前</span><span id="printName">未入力</span></div>
-            <div class="ticket-row" id="printAddressRow" style="display: none;"><span style="font-weight: 700;">ご住所</span><span id="printAddress" style="text-align: right; white-space: pre-wrap;"></span></div>
-            <div style="margin-top: 24px; margin-bottom: 8px; font-weight: 700;">ご注文内容・受取方法</div>
-            <div id="printItemsList"></div>
-            <div class="ticket-total">合計金額: <span id="printPrice">0</span> 円</div>
+    <div class="confirm-container" id="confirmContainer">
+        <h2 class="confirm-title">ご注文内容の確認</h2>
+        
+        <div class="confirm-section">
+            <h3>ご注文商品・お支払い金額</h3>
+            <div id="confirmItemsList"></div>
+            <div class="confirm-total-box">
+                <span style="font-weight: 700; margin-right: 8px;">合計:</span>
+                <span class="confirm-total" id="confirmPrice">0</span><span style="font-weight: 700; color: var(--primary);"> 円</span>
+            </div>
         </div>
-        <button class="print-back-btn" onclick="window.closePrintView()">入力画面に戻る</button>
+        
+        <div class="confirm-section">
+            <h3>お客様情報</h3>
+            <div class="confirm-info">
+                <p><strong>お名前:</strong> <span id="confirmName"></span></p>
+                <p id="confirmAddressRow" style="display: none; margin-top: 8px;">
+                    <strong>お届け先:</strong><br>
+                    <span id="confirmAddress" style="white-space: pre-wrap; display: inline-block; margin-top: 4px;"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="confirm-notes">
+            <h4 style="color: #b45309; margin-bottom: 12px; font-size: 16px;">⚠️ ご注文の前に必ずご確認ください</h4>
+            
+            <!-- ▼▼ ここから注意事項をHTMLで自由に入力・編集できます ▼▼ -->
+            <ul style="color: #78350f; margin-left: 24px; margin-bottom: 16px;">
+                <li style="margin-bottom: 6px;">決済は次回のロボカップ北九州ノードの練習会にて、<b>現金での手渡し</b>となります。</li>
+                <li style="margin-bottom: 6px;">おつりのないようにご準備をお願いいたします。</li>
+                <li style="margin-bottom: 6px;">下のボタンを押すとメールアプリが立ち上がります。内容を変更せずそのまま送信してください。</li>
+                <li style="margin-bottom: 0;">自動返信メールはございません。送信済みメールを控えとして大切に保管してください。</li>
+                <li style="margin-bottom: 6px;">現在、配送はご利用できません。ご注意ください</li>
+                <li style="margin-bottom: 6px;">なお、在庫不足時には折り返し連絡いたします。ご了承ください。</li>
+            </ul>
+            <p style="color: #78350f; font-weight: 700; text-align: center; margin-top: 20px;">
+                内容にお間違いがなければ、メールを送信して注文を確定してください。
+            </p>
+            <!-- ▲▲ ここまで ▲▲ -->
+
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="action-btn" style="background-color: var(--text-muted);" onclick="window.closeConfirmView()">戻る</button>
+            <button type="button" class="action-btn btn-mail" onclick="window.submitOrder()">✉️ 確定してメールを送信する</button>
+        </div>
     </div>
 
 
@@ -314,7 +346,6 @@
 
         // =================================================================
         // 【商品別 在庫管理スイッチ (SKU連動型)】
-        // 在庫あり ➔ true  /  売り切れ(在庫なし) ➔ false
         // =================================================================
         const IN_STOCK = {
             "DS-EG1009": true,
@@ -324,7 +355,6 @@
             "UC-1":      true,
             "UC-3":      true
         };
-        // =================================================================
 
         // =================================================================
         // 【商品ミニデータベース (詳細ページ用)】
@@ -392,14 +422,12 @@
             }
         }
 
-        // 在庫状況の反映 (SKU連動化)
+        // 在庫状況の反映
         function applyStockSettings() {
-            // メインパーツ群が全滅しているか判定
             if (!IN_STOCK["DS-EG1009"] && !IN_STOCK["CK-2"] && !IN_STOCK["XH-5"]) { 
                 document.body.classList.add('is-soldout'); 
             }
             
-            // 全てのチェックボックスに対して在庫判定を行う
             document.querySelectorAll('input[data-code]').forEach(checkbox => {
                 const sku = checkbox.getAttribute('data-code');
                 if (IN_STOCK[sku] === false) {
@@ -477,7 +505,7 @@
             document.getElementById('displayTotal').textContent = totalPrice.toLocaleString('ja-JP');
         };
 
-        // 詳細ページの描画処理
+        // 詳細ページの描画
         function renderProductDetail(sku) {
             const data = PRODUCT_DATA[sku];
             const inStock = IN_STOCK[sku];
@@ -487,7 +515,6 @@
             document.getElementById('detailPrice').textContent = `${data.price}円`;
             document.getElementById('detailDesc').textContent = data.desc;
             
-            // 特徴リストの生成
             const featuresList = document.getElementById('detailFeatures');
             featuresList.innerHTML = '';
             data.features.forEach(feature => {
@@ -496,7 +523,6 @@
                 featuresList.appendChild(li);
             });
 
-            // 在庫状況に応じたUIの変更
             const stockBadge = document.getElementById('detailStockBadge');
             const selectBtn = document.getElementById('detailSelectBtn');
 
@@ -520,8 +546,11 @@
             }
         }
 
-        // 注文確定アクション（Firestore保存 ＆ メール/PDF）
-        window.executeAction = async function(type) {
+        // ==============================================
+        // 1. 確認画面の表示処理
+        // ==============================================
+        window.showConfirmView = function() {
+            // 入力バリデーション
             const name = document.getElementById('buyerName').value.trim();
             if (!name) { alert("お名前を入力してください。"); document.getElementById('buyerName').focus(); return; }
             
@@ -533,10 +562,69 @@
             const address = document.getElementById('buyerAddress').value.trim();
             if (isPostal && !address) { alert("お届け先住所を入力してください。"); document.getElementById('buyerAddress').focus(); return; }
 
+            // 確認画面へデータを流し込む
+            const totalPriceStr = document.getElementById('displayTotal').textContent;
+            const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
+            const deliveryPrice = checkedDelivery.value;
+
+            let itemsHtml = "";
+            checkedProducts.forEach(p => { 
+                const title = p.closest('.select-card').querySelector('.card-title').textContent; 
+                const price = p.value; 
+                itemsHtml += `<div class="confirm-row"><span>${title}</span><span>${price}円</span></div>`; 
+            });
+            
+            const checkMain = document.getElementById('check-main');
+            const isMainKitSelected = checkMain && checkMain.checked && !checkMain.disabled;
+            if (isMainKitSelected) {
+                document.querySelectorAll('.option-check:checked').forEach(opt => { 
+                    if (!opt.disabled) { 
+                        const title = opt.closest('.select-card').querySelector('.card-title').textContent; 
+                        const price = opt.value; 
+                        itemsHtml += `<div class="confirm-row"><span style="color: var(--text-muted);">└ [追加] ${title}</span><span>+${price}円</span></div>`; 
+                    } 
+                });
+            }
+            
+            itemsHtml += `<div class="confirm-row" style="border-bottom: none;"><span style="color: var(--text-muted);">受取: ${deliveryName}</span><span style="color: var(--text-muted);">+${deliveryPrice}円</span></div>`;
+
+            document.getElementById('confirmItemsList').innerHTML = itemsHtml;
+            document.getElementById('confirmPrice').textContent = totalPriceStr;
+            document.getElementById('confirmName').textContent = name;
+            
+            if (isPostal && address) { 
+                document.getElementById('confirmAddressRow').style.display = 'block'; 
+                document.getElementById('confirmAddress').textContent = address; 
+            } else { 
+                document.getElementById('confirmAddressRow').style.display = 'none'; 
+            }
+
+            // 画面を切り替えて上までスクロール
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('confirmContainer').style.display = 'block';
+            window.scrollTo(0, 0);
+        };
+
+        // 確認画面から戻る
+        window.closeConfirmView = function() {
+            document.getElementById('confirmContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+        };
+
+        // ==============================================
+        // 2. 最終確定・送信処理（Firestore + メール起動）
+        // ==============================================
+        window.submitOrder = async function() {
+            // 再度データを取得
+            const name = document.getElementById('buyerName').value.trim();
+            const checkedProducts = document.querySelectorAll('.product-check:checked');
+            const checkedDelivery = document.querySelector('.delivery-radio:checked');
+            const isPostal = checkedDelivery.getAttribute('data-code') === "CP";
+            const address = document.getElementById('buyerAddress').value.trim();
             const totalPriceStr = document.getElementById('displayTotal').textContent;
             const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
 
-            // ===== Firestoreへ保存 =====
+            // Firestoreへ保存
             document.getElementById('loadingOverlay').style.display = 'flex';
             try {
                 await setDoc(doc(db, "orders", uniqueId), {
@@ -555,72 +643,56 @@
                 return;
             }
             document.getElementById('loadingOverlay').style.display = 'none';
-            // ===========================
 
-            // マニュアルの自動展開
+            // マニュアルの自動展開（メインキット購入時のみ）
             const checkMain = document.getElementById('check-main');
             const isMainKitSelected = checkMain && checkMain.checked && !checkMain.disabled;
             if (isMainKitSelected) { 
                 window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank"); 
             }
 
-            // テキスト・HTMLの生成
+            // メール本文の生成
             let itemsTextForMail = ""; 
-            let itemsHtmlForPrint = "";
-            
             checkedProducts.forEach(p => { 
                 const title = p.closest('.select-card').querySelector('.card-title').textContent; 
-                const price = p.value; 
-                itemsTextForMail += `・${title} (${price}円)\n`; 
-                itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>${price}円</span></div>`; 
+                itemsTextForMail += `・${title} (${p.value}円)\n`; 
             });
-            
             if (isMainKitSelected) {
                 document.querySelectorAll('.option-check:checked').forEach(opt => { 
                     if (!opt.disabled) { 
                         const title = opt.closest('.select-card').querySelector('.card-title').textContent; 
-                        const price = opt.value; 
-                        itemsTextForMail += `— [追加] ${title} (+${price}円)\n`; 
-                        itemsHtmlForPrint += `<div class="ticket-row"><span>${title}</span><span>+${price}円</span></div>`; 
+                        itemsTextForMail += `— [追加] ${title} (+${opt.value}円)\n`; 
                     } 
                 });
             }
-            
-            const deliveryPrice = checkedDelivery.value;
             itemsTextForMail += `・受取方法: ${deliveryName}\n`; 
-            itemsHtmlForPrint += `<div class="ticket-row"><span style="color: #64748b;">受取: ${deliveryName}</span><span style="color: #64748b;">+${deliveryPrice}円</span></div>`;
 
-            if (type === 'print') {
-                document.getElementById('printSku').textContent = currentSkuString; 
-                document.getElementById('printName').textContent = name; 
-                document.getElementById('printItemsList').innerHTML = itemsHtmlForPrint; 
-                document.getElementById('printPrice').textContent = totalPriceStr;
-                
-                if (isPostal && address) { 
-                    document.getElementById('printAddressRow').style.display = 'flex'; 
-                    document.getElementById('printAddress').textContent = address; 
-                } else { 
-                    document.getElementById('printAddressRow').style.display = 'none'; 
-                }
-                
-                document.getElementById('appContainer').style.display = 'none'; 
-                document.getElementById('printContainer').style.display = 'block';
-                setTimeout(() => { window.print(); }, 300);
-            } else if (type === 'mail') {
-                const targetEmail = "shtgames.shop@gmail.com"; 
-                const subject = encodeURIComponent(`【注文】Sirius商店 ${currentSkuString}`);
-                let addressSection = isPostal ? `【お届け先住所】\n${address}\n\n` : "";
-                const body = encodeURIComponent(`注文をお願いします。\n\n【管理コード】\n${currentSkuString}\n\n【お名前】 ${name}\n\n【ご注文内容】\n${itemsTextForMail}\n【合計金額】 ${totalPriceStr}円\n\n${addressSection}※決済はロボカップ会の練習会での現金の手渡しとなります。\n※このメールは受取時に確認させていただく場合がございますので、当日まで大切に保管し、会場にてご提示ください。`);
-                window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
-            }
+            // メーラーの起動
+            const targetEmail = "shtgames.shop@gmail.com"; 
+            const subject = encodeURIComponent(`【注文】Sirius商店 ${currentSkuString}`);
+            let addressSection = isPostal ? `【お届け先住所】\n${address}\n\n` : "";
+            
+            const body = encodeURIComponent(
+                `注文をお願いします。\n\n` +
+                `【管理コード】\n${currentSkuString}\n\n` +
+                `【お名前】 ${name}\n\n` +
+                `【ご注文内容】\n${itemsTextForMail}` +
+                `【合計金額】 ${totalPriceStr}円\n\n` +
+                `${addressSection}` +
+                `※決済はロボカップ会の練習会での現金の手渡しとなります。\n` +
+                `※このメールは受取時に確認させていただく場合がございますので、当日まで大切に保管し、会場にてご提示ください。`
+            );
+            
+            window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+            
+            // 少し待ってから元の画面に戻す
+            setTimeout(() => {
+                window.closeConfirmView();
+            }, 1000);
         };
 
-        window.closePrintView = function() { 
-            document.getElementById('printContainer').style.display = 'none'; 
-            document.getElementById('appContainer').style.display = 'block'; 
-        };
 
-        // 初期化ルーチン (URLパラメータの解析とルーティングを含む)
+        // 初期化処理
         window.onload = () => { 
             generateUniqueId(); 
             applyStockSettings(); 
@@ -630,24 +702,18 @@
             const sku = params.get('sku');
             const selectParam = params.get('select');
 
-            // 仮想ルーティング処理
             if (page === 'detail' && sku && PRODUCT_DATA[sku]) {
-                // 詳細画面を表示
                 document.getElementById('appContainer').style.display = 'none';
                 document.getElementById('productDetailView').style.display = 'block';
                 renderProductDetail(sku);
             } else {
-                // 注文フォームを表示
                 document.getElementById('appContainer').style.display = 'block';
                 document.getElementById('productDetailView').style.display = 'none';
                 
-                // 詳細画面から「選択して戻る」を踏んだ場合の自動チェック処理
                 if (selectParam) {
                     const targetCheckbox = document.querySelector(`input[data-code="${selectParam}"]`);
                     if (targetCheckbox && !targetCheckbox.disabled) {
                         targetCheckbox.checked = true;
-                        
-                        // ちょっとだけ遅延させて、対象のカードが画面中央に来るようにスクロール
                         setTimeout(() => {
                             targetCheckbox.closest('.select-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }, 100);
