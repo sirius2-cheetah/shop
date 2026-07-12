@@ -50,14 +50,20 @@
         .select-card { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 20px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background-color: #ffffff; }
         .select-card:hover { border-color: #94a3b8; background-color: #f8fafc; }
         .select-card input[type="checkbox"], .select-card input[type="radio"] { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
-        .card-content { display: flex; flex-direction: column; gap: 4px; }
+        
+        /* 売り切れ時のカード（詳細は見れるようにpointer-eventsは外す） */
+        .select-card.soldout-product { opacity: 0.6; background-color: #f1f5f9; border-color: #cbd5e1; cursor: default; }
+        .select-card.soldout-product .card-price { color: var(--text-muted); }
+        .select-card.selected { border-color: var(--primary); background-color: #f0f9ff; }
+
+        .card-content { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
         .card-title { font-weight: 700; font-size: 16px; }
         .card-desc { font-size: 13px; color: var(--text-muted); font-family: monospace; font-weight: 500; }
         .card-price { font-weight: 700; font-size: 16px; color: var(--primary); white-space: nowrap; }
 
-        .select-card.soldout-product { opacity: 0.5; cursor: not-allowed; pointer-events: none; background-color: #f1f5f9; border-color: #cbd5e1; }
-        .select-card.soldout-product .card-price { color: var(--text-muted); }
-        .select-card.selected { border-color: var(--primary); background-color: #f0f9ff; }
+        /* 「詳細を見る」ボタン */
+        .info-btn { display: inline-block; font-size: 12px; color: var(--primary); background-color: #e0f2fe; padding: 4px 12px; border-radius: 20px; font-weight: 700; margin-top: 6px; transition: background-color 0.2s; cursor: pointer; border: 1px solid #bae6fd; }
+        .info-btn:hover { background-color: #bae6fd; }
 
         .check-indicator { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; margin-right: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
         .radio-indicator { border-radius: 50%; }
@@ -80,7 +86,23 @@
         
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 100; justify-content: center; align-items: center; font-size: 20px; font-weight: 700; color: var(--primary); }
 
-        @media (max-width: 480px) { .button-group { flex-direction: column; } }
+        /* =========================================
+           商品詳細ページ (Amazonライク) のスタイル
+           ========================================= */
+        .detail-view { max-width: 800px; margin: 0 auto; display: none; }
+        .detail-container { background: var(--card-bg); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; }
+        @media(min-width: 600px) { .detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; } }
+        .detail-image-placeholder { background-color: #f1f5f9; border-radius: 12px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; border: 2px dashed #cbd5e1; min-height: 250px; }
+        .detail-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+        .detail-sku-badge { display: inline-block; background-color: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+        .detail-price { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+        .detail-desc { font-size: 15px; line-height: 1.7; margin-bottom: 24px; color: var(--text-main); }
+        .detail-features { padding-left: 20px; margin-bottom: 24px; font-size: 14px; color: var(--text-muted); }
+        .detail-features li { margin-bottom: 8px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; margin-bottom: 20px; transition: color 0.2s; cursor: pointer; }
+        .back-link:hover { color: var(--primary); }
+
+        @media (max-width: 480px) { .button-group { flex-direction: column; } .detail-container { padding: 20px; } }
 
         /* 印刷用画面スタイル */
         .print-container { display: none; background-color: white; max-width: 800px; margin: 0 auto; }
@@ -89,14 +111,17 @@
         .ticket-sku { text-align: center; font-family: monospace; font-size: 18px; color: var(--text-muted); margin-bottom: 30px; border-bottom: 2px solid #0f172a; padding-bottom: 20px; }
         .ticket-row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 16px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
         .ticket-total { font-size: 24px; font-weight: 700; text-align: right; margin-top: 30px; }
-        .back-btn { display: block; margin: 20px auto; padding: 12px 24px; background-color: var(--text-muted); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        @media print { body { padding: 0; background-color: white; } .container { display: none !important; } .print-container { display: block !important; } .back-btn { display: none !important; } .ticket { border: 1px solid #000; } }
+        .print-back-btn { display: block; margin: 20px auto; padding: 12px 24px; background-color: var(--text-muted); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        @media print { body { padding: 0; background-color: white; } .container, .detail-view { display: none !important; } .print-container { display: block !important; } .print-back-btn { display: none !important; } .ticket { border: 1px solid #000; padding: 20px; } }
     </style>
 </head>
 <body>
 
     <div id="loadingOverlay" class="loading-overlay">データを送信中...</div>
 
+    <!-- ============================================== -->
+    <!-- 注文フォーム画面（デフォルト表示） -->
+    <!-- ============================================== -->
     <div class="container" id="appContainer">
         <div class="soldout-banner">⚠️ 只今主要パーツが売り切れ中です（次回入荷をお待ちください）</div>
         <h1 class="header-title">Sirius商店 注文フォーム</h1>
@@ -117,17 +142,40 @@
             <h2 class="step-title"><span class="step-number">1</span> 商品の選択 (複数選択可能)</h2>
             <div class="card-grid">
                 <label class="select-card selected" id="card-main">
-                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">TJ3B USB-C化キット</span><span class="card-desc">型番: DS-EG1009</span></div></div>
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">TJ3B USB-C化キット</span>
+                            <span class="card-desc">型番: DS-EG1009</span>
+                            <span class="info-btn" onclick="event.preventDefault(); window.location.href='?page=detail&sku=DS-EG1009';">商品詳細を見る ➔</span>
+                        </div>
+                    </div>
                     <span class="card-price" id="price-main">990円</span>
                     <input type="checkbox" class="product-check" id="check-main" value="990" data-code="DS-EG1009" checked onchange="window.updateForm()">
                 </label>
+                
                 <label class="select-card" id="card-con">
-                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個)</span><span class="card-desc">型番: CK-2</span></div></div>
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">マイコン暴走阻止！ノイズキラーコンデンサ (2個)</span>
+                            <span class="card-desc">型番: CK-2</span>
+                            <span class="info-btn" onclick="event.preventDefault(); window.location.href='?page=detail&sku=CK-2';">商品詳細を見る ➔</span>
+                        </div>
+                    </div>
                     <span class="card-price" id="price-con">50円</span>
                     <input type="checkbox" class="product-check" id="check-con" value="50" data-code="CK-2" onchange="window.updateForm()">
                 </label>
+                
                 <label class="select-card" id="card-xh">
-                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">JST純正 XHコネクタ 2種5個セット</span><span class="card-desc">型番: XH-5</span></div></div>
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">JST純正 XHコネクタ 2種5個セット</span>
+                            <span class="card-desc">型番: XH-5</span>
+                            <span class="info-btn" onclick="event.preventDefault(); window.location.href='?page=detail&sku=XH-5';">商品詳細を見る ➔</span>
+                        </div>
+                    </div>
                     <span class="card-price" id="price-xh">200円</span>
                     <input type="checkbox" class="product-check" id="check-xh" value="200" data-code="XH-5" onchange="window.updateForm()">
                 </label>
@@ -138,17 +186,40 @@
             <h2 class="step-title"><span class="step-number">2</span> USBコードの追加オプション (複数選択可能)</h2>
             <div class="card-grid">
                 <label class="select-card" id="card-ua1">
-                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">USB A to C コード [通信向け]</span><span class="card-desc">型番: UA-1</span></div></div>
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB A to C コード [通信向け]</span>
+                            <span class="card-desc">型番: UA-1</span>
+                            <span class="info-btn" onclick="event.preventDefault(); window.location.href='?page=detail&sku=UA-1';">商品詳細を見る ➔</span>
+                        </div>
+                    </div>
                     <span class="card-price" id="price-ua1">+ 150円</span>
                     <input type="checkbox" class="option-check" id="check-ua1" value="150" data-code="UA-1" onchange="window.updateForm()">
                 </label>
+                
                 <label class="select-card" id="card-uc1">
-                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">USB C to C コード [通信向け]</span><span class="card-desc">型番: UC-1</span></div></div>
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB C to C コード [通信向け]</span>
+                            <span class="card-desc">型番: UC-1</span>
+                            <span class="info-btn" onclick="event.preventDefault(); window.location.href='?page=detail&sku=UC-1';">商品詳細を見る ➔</span>
+                        </div>
+                    </div>
                     <span class="card-price" id="price-uc1">+ 160円</span>
                     <input type="checkbox" class="option-check" id="check-uc1" value="160" data-code="UC-1" onchange="window.updateForm()">
                 </label>
+                
                 <label class="select-card" id="card-uc3">
-                    <div class="card-left"><div class="check-indicator"></div><div class="card-content"><span class="card-title">USB C to C コード [PD対応]</span><span class="card-desc">型番: UC-3</span></div></div>
+                    <div class="card-left">
+                        <div class="check-indicator"></div>
+                        <div class="card-content">
+                            <span class="card-title">USB C to C コード [PD対応]</span>
+                            <span class="card-desc">型番: UC-3</span>
+                            <span class="info-btn" onclick="event.preventDefault(); window.location.href='?page=detail&sku=UC-3';">商品詳細を見る ➔</span>
+                        </div>
+                    </div>
                     <span class="card-price" id="price-uc3">+ 770円</span>
                     <input type="checkbox" class="option-check" id="check-uc3" value="770" data-code="UC-3" onchange="window.updateForm()">
                 </label>
@@ -181,6 +252,48 @@
         </div>
     </div>
 
+
+    <!-- ============================================== -->
+    <!-- 商品詳細ページ (パラメータで切り替え) -->
+    <!-- ============================================== -->
+    <div class="detail-view" id="productDetailView">
+        <div class="back-link" onclick="window.location.href='?';">← 注文フォームに戻る</div>
+        
+        <div class="detail-container">
+            <div class="detail-layout">
+                <!-- 左側：画像プレースホルダー -->
+                <div class="detail-image-placeholder">
+                    <div style="text-align: center;">
+                        <span style="font-size: 48px;">📦</span><br>
+                        <span>商品画像<br>(NO IMAGE)</span>
+                    </div>
+                </div>
+                
+                <!-- 右側：商品情報とカートボタン -->
+                <div class="detail-info">
+                    <h2 class="detail-title" id="detailName">---</h2>
+                    <div class="detail-sku-badge" id="detailSkuBadge">型番: ---</div>
+                    
+                    <div class="detail-price" id="detailPrice">---円</div>
+                    
+                    <!-- 在庫バッジ -->
+                    <div id="detailStockBadge" style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: 700; font-size: 13px; margin-bottom: 20px;"></div>
+
+                    <div class="detail-desc" id="detailDesc">---</div>
+                    <ul class="detail-features" id="detailFeatures"></ul>
+
+                    <button class="action-btn btn-mail" id="detailSelectBtn" style="width: 100%; box-shadow: 0 4px 12px rgba(14,165,233,0.3); font-size: 15px;">
+                        🛒 この商品を選択して注文画面へ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- 印刷用画面 -->
+    <!-- ============================================== -->
     <div class="print-container" id="printContainer">
         <div class="ticket">
             <div class="ticket-title">Sirius商店 注文申込書</div>
@@ -191,27 +304,69 @@
             <div id="printItemsList"></div>
             <div class="ticket-total">合計金額: <span id="printPrice">0</span> 円</div>
         </div>
-        <button class="back-btn" onclick="window.closePrintView()">入力画面に戻る</button>
+        <button class="print-back-btn" onclick="window.closePrintView()">入力画面に戻る</button>
     </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // =================================================================
-        // 【商品別 在庫管理スイッチ】
+        // 【商品別 在庫管理スイッチ (SKU連動型)】
         // 在庫あり ➔ true  /  売り切れ(在庫なし) ➔ false
-        // ここで在庫を切り替えるだけで画面にリアルタイム反映されます。
         // =================================================================
         const IN_STOCK = {
-            MAIN: true, // TJ3B USB-C化キット (DS-EG1009)
-            CON:  true, // ノイズキラーコンデンサ (CK-2)
-            XH:   true,  // JST純正 XHコネクタセット (XH-5)
-            UA1:  true,  // USB A to C コード (UA-1)
-            UC1:  true, // USB C to C コード (UC-1)
-            UC3:  true   // USB C to C コード [PD対応] (UC-3)
+            "DS-EG1009": true,
+            "CK-2":      true,
+            "XH-5":      true,
+            "UA-1":      true,
+            "UC-1":      true,
+            "UC-3":      true
         };
         // =================================================================
+
+        // =================================================================
+        // 【商品ミニデータベース (詳細ページ用)】
+        // =================================================================
+        const PRODUCT_DATA = {
+            "DS-EG1009": {
+                name: "TJ3B USB-C化キット",
+                price: "990",
+                desc: "ダイセン製ロボットキット「TJ3B」の通信ポートを、現代の安定したUSB Type-C仕様（TTLダイレクト通信）にアップグレードするためのモジュールキットです。",
+                features: ["Type-Cケーブル1本でプログラム転送が可能", "通信エラーを激減させる安定したTTL通信チップ搭載", "ロボットのフレームに固定しやすい専用設計", "詳しいWEBマニュアル付き（24時間AIサポートあり）"]
+            },
+            "CK-2": {
+                name: "マイコン暴走阻止！ノイズキラーコンデンサ (2個)",
+                price: "50",
+                desc: "モーターの回転によって発生する電気的なノイズを吸収し、マイコンの予期せぬリセットやプログラムの暴走を防ぐための必須アイテムです。",
+                features: ["モーターの端子に直接ハンダ付けして使用", "2個セット（モーター2個分に相当）", "ノイズによる動作不良のトラブルシューティングに最適"]
+            },
+            "XH-5": {
+                name: "JST純正 XHコネクタ 2種5個セット",
+                price: "200",
+                desc: "センサーやモーター、基板間の接続に広く使われているJST（日本圧着端子製造）の純正XHコネクタセットです。",
+                features: ["2ピン用・3ピン用などよく使う種類をパッケージ", "抜けにくいロック機構付き", "自作センサー基板などの拡張に便利"]
+            },
+            "UA-1": {
+                name: "USB A to C コード [通信向け]",
+                price: "150",
+                desc: "パソコンの標準的なUSB-Aポートと、ロボット側のType-Cモジュールを接続するためのデータ通信対応ケーブルです。",
+                features: ["データ通信対応（充電専用ではありません）", "取り回しのしやすい適度な長さと柔らかさ"]
+            },
+            "UC-1": {
+                name: "USB C to C コード [通信向け]",
+                price: "160",
+                desc: "最新のノートパソコン（MacBook等）に搭載されているType-Cポート同士を直接接続するためのデータ通信対応ケーブルです。",
+                features: ["両端Type-Cコネクタ", "変換アダプタ不要でスッキリ接続", "データ通信対応"]
+            },
+            "UC-3": {
+                name: "USB C to C コード [PD対応]",
+                price: "770",
+                desc: "ロボットの通信用としてはもちろん、スマホやPCの急速充電（USB PD）など普段使いでもフル活用できる高品質ケーブルです。",
+                features: ["USB Power Delivery (PD) 規格対応", "耐久性の高い太め・高耐久シールド構造", "大容量データ通信対応"]
+            }
+        };
 
         // Firebase設定
         const firebaseConfig = {
@@ -237,51 +392,33 @@
             }
         }
 
-        // 在庫状況の反映
+        // 在庫状況の反映 (SKU連動化)
         function applyStockSettings() {
-            if (!IN_STOCK.MAIN && !IN_STOCK.CON && !IN_STOCK.XH) { 
+            // メインパーツ群が全滅しているか判定
+            if (!IN_STOCK["DS-EG1009"] && !IN_STOCK["CK-2"] && !IN_STOCK["XH-5"]) { 
                 document.body.classList.add('is-soldout'); 
             }
-            if (!IN_STOCK.MAIN) { 
-                document.getElementById('card-main').classList.add('soldout-product'); 
-                document.getElementById('price-main').textContent = "売り切れ"; 
-                document.getElementById('check-main').checked = false; 
-                document.getElementById('check-main').disabled = true; 
-                document.getElementById('card-main').classList.remove('selected'); 
-            }
-            if (!IN_STOCK.CON) { 
-                document.getElementById('card-con').classList.add('soldout-product'); 
-                document.getElementById('price-con').textContent = "売り切れ"; 
-                document.getElementById('check-con').checked = false; 
-                document.getElementById('check-con').disabled = true; 
-            }
-            if (!IN_STOCK.XH) { 
-                document.getElementById('card-xh').classList.add('soldout-product'); 
-                document.getElementById('price-xh').textContent = "売り切れ"; 
-                document.getElementById('check-xh').disabled = true; 
-            }
-            if (!IN_STOCK.UA1) { 
-                document.getElementById('card-ua1').classList.add('soldout-product'); 
-                document.getElementById('price-ua1').textContent = "売り切れ"; 
-                document.getElementById('check-ua1').disabled = true; 
-            }
-            if (!IN_STOCK.UC1) { 
-                document.getElementById('card-uc1').classList.add('soldout-product'); 
-                document.getElementById('price-uc1').textContent = "売り切れ"; 
-                document.getElementById('check-uc1').disabled = true; 
-            }
-            if (!IN_STOCK.UC3) { 
-                document.getElementById('card-uc3').classList.add('soldout-product'); 
-                document.getElementById('price-uc3').textContent = "売り切れ"; 
-                document.getElementById('check-uc3').disabled = true; 
-            }
+            
+            // 全てのチェックボックスに対して在庫判定を行う
+            document.querySelectorAll('input[data-code]').forEach(checkbox => {
+                const sku = checkbox.getAttribute('data-code');
+                if (IN_STOCK[sku] === false) {
+                    const card = checkbox.closest('.select-card');
+                    card.classList.add('soldout-product');
+                    card.querySelector('.card-price').textContent = "売り切れ";
+                    checkbox.checked = false;
+                    checkbox.disabled = true;
+                    card.classList.remove('selected');
+                }
+            });
         }
 
         // 金額の計算とUI更新
         window.updateForm = function() {
             let totalPrice = 0;
             let skuParts = [];
-            const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
+            const checkMain = document.getElementById('check-main');
+            const isMainKitSelected = checkMain && checkMain.checked && !checkMain.disabled;
             
             const products = document.querySelectorAll('.product-check');
             products.forEach(p => {
@@ -340,6 +477,49 @@
             document.getElementById('displayTotal').textContent = totalPrice.toLocaleString('ja-JP');
         };
 
+        // 詳細ページの描画処理
+        function renderProductDetail(sku) {
+            const data = PRODUCT_DATA[sku];
+            const inStock = IN_STOCK[sku];
+            
+            document.getElementById('detailName').textContent = data.name;
+            document.getElementById('detailSkuBadge').textContent = `型番: ${sku}`;
+            document.getElementById('detailPrice').textContent = `${data.price}円`;
+            document.getElementById('detailDesc').textContent = data.desc;
+            
+            // 特徴リストの生成
+            const featuresList = document.getElementById('detailFeatures');
+            featuresList.innerHTML = '';
+            data.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                featuresList.appendChild(li);
+            });
+
+            // 在庫状況に応じたUIの変更
+            const stockBadge = document.getElementById('detailStockBadge');
+            const selectBtn = document.getElementById('detailSelectBtn');
+
+            if (inStock) {
+                stockBadge.textContent = "在庫あり";
+                stockBadge.style.backgroundColor = "#dcfce7";
+                stockBadge.style.color = "#166534";
+                selectBtn.disabled = false;
+                selectBtn.style.backgroundColor = "var(--primary)";
+                selectBtn.textContent = "🛒 この商品を選択して注文画面へ";
+                selectBtn.onclick = () => { window.location.href = `?select=${sku}`; };
+            } else {
+                stockBadge.textContent = "売り切れ";
+                stockBadge.style.backgroundColor = "#fee2e2";
+                stockBadge.style.color = "#b91c1c";
+                selectBtn.disabled = true;
+                selectBtn.style.backgroundColor = "#94a3b8";
+                selectBtn.style.cursor = "not-allowed";
+                selectBtn.textContent = "現在選択できません";
+                selectBtn.onclick = null;
+            }
+        }
+
         // 注文確定アクション（Firestore保存 ＆ メール/PDF）
         window.executeAction = async function(type) {
             const name = document.getElementById('buyerName').value.trim();
@@ -378,7 +558,8 @@
             // ===========================
 
             // マニュアルの自動展開
-            const isMainKitSelected = document.getElementById('check-main').checked && !document.getElementById('check-main').disabled;
+            const checkMain = document.getElementById('check-main');
+            const isMainKitSelected = checkMain && checkMain.checked && !checkMain.disabled;
             if (isMainKitSelected) { 
                 window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank"); 
             }
@@ -439,10 +620,41 @@
             document.getElementById('appContainer').style.display = 'block'; 
         };
 
+        // 初期化ルーチン (URLパラメータの解析とルーティングを含む)
         window.onload = () => { 
             generateUniqueId(); 
             applyStockSettings(); 
-            window.updateForm(); 
+
+            const params = new URLSearchParams(window.location.search);
+            const page = params.get('page');
+            const sku = params.get('sku');
+            const selectParam = params.get('select');
+
+            // 仮想ルーティング処理
+            if (page === 'detail' && sku && PRODUCT_DATA[sku]) {
+                // 詳細画面を表示
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('productDetailView').style.display = 'block';
+                renderProductDetail(sku);
+            } else {
+                // 注文フォームを表示
+                document.getElementById('appContainer').style.display = 'block';
+                document.getElementById('productDetailView').style.display = 'none';
+                
+                // 詳細画面から「選択して戻る」を踏んだ場合の自動チェック処理
+                if (selectParam) {
+                    const targetCheckbox = document.querySelector(`input[data-code="${selectParam}"]`);
+                    if (targetCheckbox && !targetCheckbox.disabled) {
+                        targetCheckbox.checked = true;
+                        
+                        // ちょっとだけ遅延させて、対象のカードが画面中央に来るようにスクロール
+                        setTimeout(() => {
+                            targetCheckbox.closest('.select-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 100);
+                    }
+                }
+                window.updateForm(); 
+            }
         };
     </script>
 </body>
