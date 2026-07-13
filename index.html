@@ -83,9 +83,7 @@
         
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 100; justify-content: center; align-items: center; font-size: 20px; font-weight: 700; color: var(--primary); }
 
-        /* =========================================
-           商品詳細ページ (Amazonライク) のスタイル
-           ========================================= */
+        /* 商品詳細ページ */
         .detail-view { max-width: 800px; margin: 0 auto; display: none; }
         .detail-container { background: var(--card-bg); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; }
         @media(min-width: 600px) { .detail-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; } }
@@ -99,9 +97,7 @@
         .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; margin-bottom: 20px; transition: color 0.2s; cursor: pointer; }
         .back-link:hover { color: var(--primary); }
 
-        /* =========================================
-           確認画面 のスタイル
-           ========================================= */
+        /* 確認画面 */
         .confirm-container { display: none; background: var(--card-bg); border-radius: 16px; padding: 32px; box-shadow: var(--shadow-md); border: 1px solid var(--border); max-width: 680px; margin: 0 auto; }
         .confirm-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 16px; }
         .confirm-section { margin-bottom: 28px; }
@@ -131,11 +127,12 @@
             <h2 class="step-title"><span class="step-number">0</span> お客様情報</h2>
             <div class="input-group" style="margin-bottom: 0;">
                 <label for="buyerName">お名前 (ニックネーム可) <span class="required-badge">必須</span></label>
-                <input type="text" id="buyerName" placeholder="例: ロボタロウ">
+                <!-- oninputで入力のたびにlocalStorageに保存 -->
+                <input type="text" id="buyerName" placeholder="例: ロボタロウ" oninput="window.updateForm()">
             </div>
             <div class="input-group" id="addressGroup" style="display: none; margin-top: 20px; margin-bottom: 0;">
                 <label for="buyerAddress">お届け先住所 <span class="required-badge">必須</span></label>
-                <textarea id="buyerAddress" placeholder="〒000-0000&#10;都道府県 市区町村 番地・マンション名"></textarea>
+                <textarea id="buyerAddress" placeholder="〒000-0000&#10;都道府県 市区町村 番地・マンション名" oninput="window.updateForm()"></textarea>
             </div>
         </div>
 
@@ -152,7 +149,8 @@
                         </div>
                     </div>
                     <span class="card-price" id="price-main">990円</span>
-                    <input type="checkbox" class="product-check" id="check-main" value="990" data-code="DS-EG1009" checked onchange="window.updateForm()">
+                    <!-- checkedを外してJavaScriptの復元に任せる -->
+                    <input type="checkbox" class="product-check" id="check-main" value="990" data-code="DS-EG1009" onchange="window.updateForm()">
                 </label>
                 
                 <label class="select-card" id="card-con">
@@ -233,12 +231,12 @@
                 <label class="select-card selected" id="card-direct">
                     <div class="card-left"><div class="check-indicator radio-indicator"></div><div class="card-content"><span class="card-title">直接手渡し</span><span class="card-desc">次回集まりの際にお渡しします</span></div></div>
                     <span class="card-price">追加なし</span>
-                    <input type="radio" name="delivery" class="delivery-radio" value="0" data-code="" checked onchange="window.updateForm()">
+                    <input type="radio" name="delivery" class="delivery-radio" id="delivery-direct" value="0" data-code="" checked onchange="window.updateForm()">
                 </label>
                 <label class="select-card" id="card-mail">
                     <div class="card-left"><div class="check-indicator radio-indicator"></div><div class="card-content"><span class="card-title">郵送 (クリックポスト)</span><span class="card-desc">型番: CP</span></div></div>
                     <span class="card-price">+ 185円</span>
-                    <input type="radio" name="delivery" class="delivery-radio" value="185" data-code="CP" onchange="window.updateForm()">
+                    <input type="radio" name="delivery" class="delivery-radio" id="delivery-cp" value="185" data-code="CP" onchange="window.updateForm()">
                 </label>
             </div>
         </div>
@@ -318,7 +316,7 @@
             <h4 style="color: #b45309; margin-bottom: 12px; font-size: 16px;">⚠️ ご注文の前に必ずご確認ください</h4>
             
             <!-- ▼▼ ここから注意事項をHTMLで自由に入力・編集できます ▼▼ -->
-            <ul style="color: #78350f; margin-left: 24px; margin-bottom: 16px;">
+             <ul style="color: #78350f; margin-left: 24px; margin-bottom: 16px;">
                 <li style="margin-bottom: 6px;">決済は次回のロボカップ北九州ノードの練習会にて、<b>現金での手渡し</b>となります。</li>
                 <li style="margin-bottom: 6px;">おつりのないようにご準備をお願いいたします。</li>
                 <li style="margin-bottom: 6px;">下のボタンを押すとメールアプリが立ち上がります。内容を変更せずそのまま送信してください。</li>
@@ -441,6 +439,53 @@
             });
         }
 
+        // ==============================================
+        // ★NEW: Web Storage (localStorage) への保存機能
+        // ==============================================
+        window.saveCartState = function() {
+            const state = {
+                selections: Array.from(document.querySelectorAll('.product-check:checked, .option-check:checked, .delivery-radio:checked')).map(el => el.id),
+                name: document.getElementById('buyerName').value,
+                address: document.getElementById('buyerAddress').value
+            };
+            localStorage.setItem('siriusShopState', JSON.stringify(state));
+        };
+
+        // ★NEW: Web Storage (localStorage) からの復元機能
+        window.loadCartState = function() {
+            const saved = localStorage.getItem('siriusShopState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    
+                    // 一旦すべてのチェックを外す
+                    document.querySelectorAll('.product-check, .option-check').forEach(el => el.checked = false);
+                    
+                    // 保存されていた選択状態を復元
+                    if (state.selections && state.selections.length > 0) {
+                        state.selections.forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el && !el.disabled) {
+                                el.checked = true;
+                            }
+                        });
+                    }
+                    
+                    // 名前と住所の復元
+                    if (state.name) document.getElementById('buyerName').value = state.name;
+                    if (state.address) document.getElementById('buyerAddress').value = state.address;
+                } catch(e) {
+                    console.error("Cart data loading error:", e);
+                }
+            } else {
+                // 初回アクセス時などデータがない場合は、メイン商品をデフォルトでチェック
+                const checkMain = document.getElementById('check-main');
+                if (checkMain && !checkMain.disabled) {
+                    checkMain.checked = true;
+                }
+            }
+        };
+
         // 金額の計算とUI更新
         window.updateForm = function() {
             let totalPrice = 0;
@@ -503,6 +548,9 @@
             currentSkuString = (skuParts.length === 0 || (skuParts.length === 1 && skuParts[0] === "CP")) ? `[${uniqueId}] 未選択` : `[${uniqueId}] ${skuParts.join('+')}`;
             document.getElementById('displaySku').textContent = `注文構成: ${currentSkuString}`;
             document.getElementById('displayTotal').textContent = totalPrice.toLocaleString('ja-JP');
+
+            // ★状態が変わるたびにlocalStorageを上書き保存
+            window.saveCartState();
         };
 
         // 詳細ページの描画
@@ -547,10 +595,9 @@
         }
 
         // ==============================================
-        // 1. 確認画面の表示処理
+        // 確認画面の表示処理
         // ==============================================
         window.showConfirmView = function() {
-            // 入力バリデーション
             const name = document.getElementById('buyerName').value.trim();
             if (!name) { alert("お名前を入力してください。"); document.getElementById('buyerName').focus(); return; }
             
@@ -562,7 +609,6 @@
             const address = document.getElementById('buyerAddress').value.trim();
             if (isPostal && !address) { alert("お届け先住所を入力してください。"); document.getElementById('buyerAddress').focus(); return; }
 
-            // 確認画面へデータを流し込む
             const totalPriceStr = document.getElementById('displayTotal').textContent;
             const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
             const deliveryPrice = checkedDelivery.value;
@@ -599,23 +645,20 @@
                 document.getElementById('confirmAddressRow').style.display = 'none'; 
             }
 
-            // 画面を切り替えて上までスクロール
             document.getElementById('appContainer').style.display = 'none';
             document.getElementById('confirmContainer').style.display = 'block';
             window.scrollTo(0, 0);
         };
 
-        // 確認画面から戻る
         window.closeConfirmView = function() {
             document.getElementById('confirmContainer').style.display = 'none';
             document.getElementById('appContainer').style.display = 'block';
         };
 
         // ==============================================
-        // 2. 最終確定・送信処理（Firestore + メール起動）
+        // 最終確定・送信処理（Firestore + メール起動 + localStorageクリア）
         // ==============================================
         window.submitOrder = async function() {
-            // 再度データを取得
             const name = document.getElementById('buyerName').value.trim();
             const checkedProducts = document.querySelectorAll('.product-check:checked');
             const checkedDelivery = document.querySelector('.delivery-radio:checked');
@@ -624,7 +667,6 @@
             const totalPriceStr = document.getElementById('displayTotal').textContent;
             const deliveryName = checkedDelivery.closest('.select-card').querySelector('.card-title').textContent;
 
-            // Firestoreへ保存
             document.getElementById('loadingOverlay').style.display = 'flex';
             try {
                 await setDoc(doc(db, "orders", uniqueId), {
@@ -644,14 +686,15 @@
             }
             document.getElementById('loadingOverlay').style.display = 'none';
 
-            // マニュアルの自動展開（メインキット購入時のみ）
+            // ★NEW: 注文が確定したので、localStorageから保存データを削除
+            localStorage.removeItem('siriusShopState');
+
             const checkMain = document.getElementById('check-main');
             const isMainKitSelected = checkMain && checkMain.checked && !checkMain.disabled;
             if (isMainKitSelected) { 
                 window.open("https://sirius2-cheetah.github.io/shop/manual/USB%E3%82%AD%E3%83%83%E3%83%88DS-EG1009/", "_blank"); 
             }
 
-            // メール本文の生成
             let itemsTextForMail = ""; 
             checkedProducts.forEach(p => { 
                 const title = p.closest('.select-card').querySelector('.card-title').textContent; 
@@ -667,7 +710,6 @@
             }
             itemsTextForMail += `・受取方法: ${deliveryName}\n`; 
 
-            // メーラーの起動
             const targetEmail = "shtgames.shop@gmail.com"; 
             const subject = encodeURIComponent(`【注文】Sirius商店 ${currentSkuString}`);
             let addressSection = isPostal ? `【お届け先住所】\n${address}\n\n` : "";
@@ -685,10 +727,11 @@
             
             window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
             
-            // 少し待ってから元の画面に戻す
             setTimeout(() => {
                 window.closeConfirmView();
-            }, 1000);
+                // 注文完了後にリロードして画面をリセットする
+                window.location.href = window.location.pathname;
+            }, 1500);
         };
 
 
@@ -710,6 +753,10 @@
                 document.getElementById('appContainer').style.display = 'block';
                 document.getElementById('productDetailView').style.display = 'none';
                 
+                // ★NEW: ページ読み込み時にlocalStorageから選択状態と入力内容を復元
+                window.loadCartState();
+                
+                // URLパラメータで「詳細から選択された場合」の処理
                 if (selectParam) {
                     const targetCheckbox = document.querySelector(`input[data-code="${selectParam}"]`);
                     if (targetCheckbox && !targetCheckbox.disabled) {
@@ -719,6 +766,8 @@
                         }, 100);
                     }
                 }
+                
+                // 復元した状態で画面表示と金額を更新
                 window.updateForm(); 
             }
         };
